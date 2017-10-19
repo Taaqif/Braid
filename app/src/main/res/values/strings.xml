@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Braid</string>
+
+    <string name="button_add">Add A Book</string>
+    <string name="button_reading">Reading</string>
+    <string name="button_toBeRead">To Be Read</string>
+    <string name="button_read">Read</string>
+    <string name="button_showAll">Show All</string>
+    <string name="text_mainIntro">Search for a specific book, add a book, search for books you are currently reading, search for books you wish to read, search for books you have read, or show all of the books you have added.</string>
+
+
 </resources>
