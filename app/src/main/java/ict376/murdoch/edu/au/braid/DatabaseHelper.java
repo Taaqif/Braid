@@ -1,10 +1,17 @@
 package ict376.murdoch.edu.au.braid;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 /**
+ * Database Helper class
  * Created by Taaqif on 23/10/2017.
  */
 
@@ -130,7 +137,91 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
 //    BOOK_COLUMN_TITLE,BOOK_COLUMN_ISBNBOOK_COLUMN_COVER,BOOK_COLUMN_CATEGORIESBOOK_COLUMN_PUBLISHERID,BOOK_COLUMN_PUBLISHED,BOOK_COLUMN_ADDDATE,BOOK_COLUMN_RATINGBOOK_COLUMN_TOTALPAGESBOOK_COLUMN_CURRENTPAGE
-    public void insertBook(String title, String ISBN, String cover, String categories, String publisher, String publishedDate, int rating, int totalPages, int currentPage ){
+    public boolean insertBook(String title, String ISBN, String cover, String categories, String[] author, String publisher, String publishedDate, int rating, int totalPages, int currentPage ){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // Prepare the row to insert
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(BOOK_COLUMN_TITLE, title);
+        contentValues.put(BOOK_COLUMN_ISBN, ISBN);
+        contentValues.put(BOOK_COLUMN_COVER, cover);
+        contentValues.put(BOOK_COLUMN_CATEGORIES, categories);
+
+        contentValues.put(BOOK_COLUMN_PUBLISHERID, getPublisherID(publisher));
+        contentValues.put(BOOK_COLUMN_PUBLISHED, publishedDate);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
+        String date = sdf.format(new Date());
+        contentValues.put(BOOK_COLUMN_ADDDATE, date);
+
+        contentValues.put(BOOK_COLUMN_RATING, rating);
+        contentValues.put(BOOK_COLUMN_TOTALPAGES, totalPages);
+        contentValues.put(BOOK_COLUMN_CURRENTPAGE, currentPage);
+
+        // Insert the row
+        int id = (int) db.insert(BOOK_TABLE_NAME, null, contentValues);
+        if(id > 0){
+            for (String s : author) {
+                contentValues = new ContentValues();
+                contentValues.put(BOOK_AUTHOR_COLUMN_BOOKID, id);
+                contentValues.put(BOOK_AUTHOR_COLUMN_AUTHORID, getAuthorID(s));
+                db.insert(BOOK_AUTHOR_TABLE_NAME, null, contentValues);
+            }
+
+
+            return true;
+        }
+        return false;
+    }
+
+    private int getPublisherID(String name) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int id;
+        Cursor c = db.rawQuery("SELECT ? FROM ? WHERE ? = ?", new String[]{
+                PUBLISHER_COLUMN_ID,
+                PUBLISHER_TABLE_NAME,
+                PUBLISHER_TABLE_NAME,
+                name});
+
+        //if the id is found, return it
+        if(c!=null && c.getCount()>0){
+            c.moveToFirst();
+            id = c.getInt(c.getColumnIndex(PUBLISHER_COLUMN_ID));
+        }else{
+            //if not, add it
+            ContentValues contentValues = new ContentValues();
+
+            contentValues.put(PUBLISHER_COLUMN_NAME, name);
+            id = (int) db.insert(PUBLISHER_TABLE_NAME, null, contentValues);
+        }
+        if(c!=null)c.close();
+        return id;
+
+    }
+
+    private int getAuthorID(String name) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int id;
+        Cursor c = db.rawQuery("SELECT ? FROM ? WHERE ? = ?", new String[]{
+                AUTHOR_COLUMN_ID,
+                AUTHOR_TABLE_NAME,
+                AUTHOR_TABLE_NAME,
+                name});
+
+        //if the id is found, return it
+        if(c!=null && c.getCount()>0){
+            c.moveToFirst();
+            id = c.getInt(c.getColumnIndex(AUTHOR_COLUMN_ID));
+        }else{
+            //if not, add it
+            ContentValues contentValues = new ContentValues();
+
+            contentValues.put(AUTHOR_COLUMN_NAME, name);
+            id = (int) db.insert(AUTHOR_TABLE_NAME, null, contentValues);
+        }
+        if(c!=null)c.close();
+        return id;
 
     }
 }
