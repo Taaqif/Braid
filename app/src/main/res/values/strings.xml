@@ -9,4 +9,16 @@
     <string name="text_mainIntro">Search for a specific book, add a book, search for books you are currently reading, search for books you wish to read, search for books you have read, or show all of the books you have added.</string>
 
 
+    <!-- Strings for the add book fragment -->
+    <string name="textView_title">Title:</string>
+    <string name="textView_isbn">ISBN:</string>
+    <string name="textView_cover">Cover:</string>
+    <string name="textView_categorie">Genre:</string>
+    <string name="textView_publisher">Publisher:</string>
+    <string name="textView_publisheddate">Date Published:</string>
+    <string name="textView_date">Date:</string>
+    <string name="textView_rating">Rating:</string>
+    <string name="textView_totalpages">Total Pages:</string>
+    <string name="textView_currentpage">Current Page:</string>
+
 </resources>
