@@ -8,14 +8,14 @@
     <!-- TODO: Update blank fragment layout -->
 
     <EditText
-        android:id="@+id/editText4"
+        android:id="@+id/editText14"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="36dp"
         android:ems="10"
         android:inputType="text"
-        android:textSize="12sp"
-        tools:layout_editor_absoluteX="181dp"
-        tools:layout_editor_absoluteY="170dp" />
+        android:textAppearance="@android:style/TextAppearance.Material.Small"
+        tools:layout_editor_absoluteX="147dp"
+        tools:layout_editor_absoluteY="407dp" />
 
     <TextView
         android:id="@+id/addBookTV"
@@ -38,7 +38,7 @@
         android:layout_height="wrap_content"
         android:text="Add Book"
         tools:layout_editor_absoluteX="147dp"
-        tools:layout_editor_absoluteY="435dp" />
+        tools:layout_editor_absoluteY="459dp" />
 
     <TextView
         android:id="@+id/tv_cover"
@@ -55,7 +55,7 @@
         android:layout_height="wrap_content"
         android:text="@string/textView_categorie"
         tools:layout_editor_absoluteX="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="24dp"
         app:layout_constraintBottom_toTopOf="@+id/tv_publisher" />
 
     <TextView
@@ -64,7 +64,7 @@
         android:layout_height="wrap_content"
         android:text="@string/textView_publisher"
         tools:layout_editor_absoluteX="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="24dp"
         app:layout_constraintBottom_toTopOf="@+id/tv_publishedDate" />
 
     <TextView
@@ -73,7 +73,7 @@
         android:layout_height="wrap_content"
         android:text="@string/textView_date"
         tools:layout_editor_absoluteX="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="24dp"
         app:layout_constraintBottom_toTopOf="@+id/tv_rating" />
 
     <TextView
@@ -82,7 +82,7 @@
         android:layout_height="wrap_content"
         android:text="@string/textView_rating"
         tools:layout_editor_absoluteX="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="24dp"
         app:layout_constraintBottom_toTopOf="@+id/tv_totalPages" />
 
     <TextView
@@ -91,7 +91,7 @@
         android:layout_height="wrap_content"
         android:text="@string/textView_totalpages"
         tools:layout_editor_absoluteX="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="24dp"
         app:layout_constraintBottom_toTopOf="@+id/tv_currentPage" />
 
     <TextView
@@ -100,7 +100,7 @@
         android:layout_height="wrap_content"
         android:text="@string/textView_currentpage"
         tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="365dp" />
+        tools:layout_editor_absoluteY="418dp" />
 
     <TextView
         android:id="@+id/tv_publishedDate"
@@ -108,7 +108,7 @@
         android:layout_height="wrap_content"
         android:text="@string/textView_publisheddate"
         tools:layout_editor_absoluteX="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="24dp"
         app:layout_constraintBottom_toTopOf="@+id/tv_date" />
 
     <TextView
@@ -132,31 +132,100 @@
     <EditText
         android:id="@+id/et_isbn"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="36dp"
         android:ems="10"
         android:inputType="text"
-        android:textSize="12sp"
-        tools:layout_editor_absoluteX="181dp"
-        tools:layout_editor_absoluteY="90dp" />
+        android:textAppearance="@android:style/TextAppearance.Material.Small"
+        tools:layout_editor_absoluteX="147dp"
+        android:layout_marginBottom="4dp"
+        app:layout_constraintBottom_toTopOf="@+id/et_cover" />
 
     <EditText
         android:id="@+id/et_cover"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="36dp"
         android:ems="10"
         android:inputType="text"
-        android:textSize="12sp"
-        tools:layout_editor_absoluteX="181dp"
-        tools:layout_editor_absoluteY="134dp" />
+        android:textAppearance="@android:style/TextAppearance.Material.Small"
+        tools:layout_editor_absoluteX="147dp"
+        android:layout_marginBottom="4dp"
+        app:layout_constraintBottom_toTopOf="@+id/editText9" />
+
+    <EditText
+        android:id="@+id/editText8"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:ems="10"
+        android:inputType="text"
+        android:textAppearance="@android:style/TextAppearance.Material.Small"
+        tools:layout_editor_absoluteX="147dp"
+        android:layout_marginBottom="4dp"
+        app:layout_constraintBottom_toTopOf="@+id/editText10" />
+
+    <EditText
+        android:id="@+id/editText10"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:ems="10"
+        android:inputType="text"
+        android:textAppearance="@android:style/TextAppearance.Material.Small"
+        tools:layout_editor_absoluteX="147dp"
+        android:layout_marginBottom="4dp"
+        app:layout_constraintBottom_toTopOf="@+id/editText12" />
+
+    <EditText
+        android:id="@+id/editText11"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:ems="10"
+        android:inputType="text"
+        android:textAppearance="@android:style/TextAppearance.Material.Small"
+        tools:layout_editor_absoluteX="147dp"
+        android:layout_marginBottom="4dp"
+        app:layout_constraintBottom_toTopOf="@+id/editText13" />
+
+    <EditText
+        android:id="@+id/editText13"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:ems="10"
+        android:inputType="text"
+        android:textAppearance="@android:style/TextAppearance.Material.Small"
+        tools:layout_editor_absoluteX="147dp"
+        android:layout_marginBottom="4dp"
+        app:layout_constraintBottom_toTopOf="@+id/editText14" />
+
+    <EditText
+        android:id="@+id/editText12"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:ems="10"
+        android:inputType="text"
+        android:textAppearance="@android:style/TextAppearance.Material.Small"
+        tools:layout_editor_absoluteX="147dp"
+        android:layout_marginBottom="4dp"
+        app:layout_constraintBottom_toTopOf="@+id/editText11" />
+
+    <EditText
+        android:id="@+id/editText9"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:ems="10"
+        android:inputType="text"
+        android:textAppearance="@android:style/TextAppearance.Material.Small"
+        tools:layout_editor_absoluteX="147dp"
+        android:layout_marginBottom="4dp"
+        app:layout_constraintBottom_toTopOf="@+id/editText8" />
 
     <EditText
         android:id="@+id/editText2"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="36dp"
         android:ems="10"
         android:inputType="text"
-        android:textSize="12sp"
-        tools:layout_editor_absoluteX="181dp"
-        tools:layout_editor_absoluteY="54dp" />
+        android:textAppearance="@android:style/TextAppearance.Material.Small"
+        tools:layout_editor_absoluteX="147dp"
+        android:layout_marginBottom="4dp"
+        app:layout_constraintBottom_toTopOf="@+id/et_isbn" />
 
 </android.support.constraint.ConstraintLayout>
