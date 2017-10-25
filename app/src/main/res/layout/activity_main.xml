@@ -1,130 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="ict376.murdoch.edu.au.braid.MainActivity">
+    android:layout_width="match_parent" android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/searchBox"
-        android:layout_width="215dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="11dp"
-        android:layout_marginTop="16dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/textView"
-        app:layout_constraintHorizontal_bias="0.828"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        tools:layout_constraintBottom_creator="1"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintTop_creator="1" />
-
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text="@string/button_add"
-        app:layout_constraintBottom_toTopOf="@+id/button3"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:text="@string/button_add" />
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text="@string/button_toBeRead"
-        app:layout_constraintBottom_toTopOf="@+id/button4"
-        app:layout_constraintHorizontal_bias="0.501"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:text="@string/button_toBeRead" />
-
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text="@string/button_reading"
-        app:layout_constraintBottom_toTopOf="@+id/button2"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:text="@string/button_reading" />
-
-    <Button
-        android:id="@+id/button4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="42dp"
-        android:text="@string/button_read"
-        app:layout_constraintBottom_toTopOf="@+id/button5"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        tools:layout_constraintBottom_creator="1"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:text="@string/button_read" />
-
-    <Button
-        android:id="@+id/button5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="38dp"
-        android:text="@string/button_showAll"
+    <FrameLayout
+        android:id="@+id/menu_fragment_container"
+        android:layout_width="400dp"
+        android:layout_height="471dp"
+        android:layout_weight="3"
+        android:background="?android:attr/detailsElementBackground"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        tools:layout_constraintBottom_creator="1"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:text="@string/button_showAll" />
+        android:layout_below="@+id/textView"
+        android:layout_centerHorizontal="true">
+
+    </FrameLayout>
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="0dp"
-        android:layout_height="78dp"
-        android:layout_marginBottom="70dp"
-        android:layout_marginEnd="7dp"
-        android:layout_marginLeft="7dp"
-        android:layout_marginRight="7dp"
-        android:layout_marginStart="7dp"
-        android:layout_marginTop="67dp"
-        android:text="@string/text_mainIntro"
-        app:layout_constraintBottom_toBottomOf="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="8dp"
+        android:text="Main Menu"
+        android:textColor="@android:color/black"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/menu_fragment_container"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_constraintBottom_creator="1"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintTop_creator="1"
-        tools:text="@string/text_mainIntro" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="107dp"
-        android:layout_height="23dp"
-        android:layout_marginRight="7dp"
-        android:text="Search:"
-        android:textSize="18sp"
-        app:layout_constraintRight_toLeftOf="@+id/searchBox"
-        android:layout_marginEnd="7dp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/searchBox"
-        tools:layout_constraintBaseline_creator="1" />
-
-</android.support.constraint.ConstraintLayout>
+        app:layout_constraintRight_toRightOf="parent" />
+</RelativeLayout>
