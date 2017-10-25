@@ -8,7 +8,7 @@
     <!-- TODO: Update blank fragment layout -->
 
     <EditText
-        android:id="@+id/editText14"
+        android:id="@+id/et_currentpage"
         android:layout_width="wrap_content"
         android:layout_height="36dp"
         android:ems="10"
@@ -18,12 +18,12 @@
         tools:layout_constraintRight_creator="1"
         tools:layout_constraintBottom_creator="1"
         app:layout_constraintBottom_toTopOf="@+id/button_addBook"
-        app:layout_constraintRight_toRightOf="@+id/editText13"
+        app:layout_constraintRight_toRightOf="@+id/et_totalpages"
         android:layout_marginTop="12dp"
         app:layout_constraintTop_toBottomOf="@+id/tv_totalPages"
         tools:layout_constraintLeft_creator="1"
         android:layout_marginBottom="16dp"
-        app:layout_constraintLeft_toLeftOf="@+id/editText13" />
+        app:layout_constraintLeft_toLeftOf="@+id/et_totalpages" />
 
     <TextView
         android:id="@+id/addBookTV"
@@ -38,7 +38,9 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintTop_creator="1"
-        android:layout_marginStart="126dp" />
+        android:layout_marginStart="126dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/et_title" />
 
     <Button
         android:id="@+id/button_addBook"
@@ -49,7 +51,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         tools:layout_constraintLeft_creator="1"
         android:layout_marginBottom="4dp"
-        app:layout_constraintLeft_toLeftOf="@+id/editText14" />
+        app:layout_constraintLeft_toLeftOf="@+id/et_currentpage" />
 
     <TextView
         android:id="@+id/tv_cover"
@@ -194,108 +196,108 @@
         android:inputType="text"
         android:textAppearance="@android:style/TextAppearance.Material.Small"
         android:layout_marginBottom="4dp"
-        app:layout_constraintBottom_toTopOf="@+id/editText9"
+        app:layout_constraintBottom_toTopOf="@+id/et_genre"
         tools:layout_constraintRight_creator="1"
-        app:layout_constraintRight_toRightOf="@+id/editText9"
+        app:layout_constraintRight_toRightOf="@+id/et_genre"
         tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="@+id/editText9" />
+        app:layout_constraintLeft_toLeftOf="@+id/et_genre" />
 
     <EditText
-        android:id="@+id/editText8"
+        android:id="@+id/et_publisher"
         android:layout_width="wrap_content"
         android:layout_height="36dp"
         android:ems="10"
         android:inputType="text"
         android:textAppearance="@android:style/TextAppearance.Material.Small"
         android:layout_marginBottom="4dp"
-        app:layout_constraintBottom_toTopOf="@+id/editText10"
+        app:layout_constraintBottom_toTopOf="@+id/et_pubdate"
         android:layout_marginStart="34dp"
         tools:layout_constraintLeft_creator="1"
         app:layout_constraintLeft_toRightOf="@+id/tv_publishedDate"
         android:layout_marginLeft="34dp" />
 
     <EditText
-        android:id="@+id/editText10"
+        android:id="@+id/et_pubdate"
         android:layout_width="wrap_content"
         android:layout_height="36dp"
         android:ems="10"
         android:inputType="text"
         android:textAppearance="@android:style/TextAppearance.Material.Small"
         android:layout_marginBottom="4dp"
-        app:layout_constraintBottom_toTopOf="@+id/editText12"
+        app:layout_constraintBottom_toTopOf="@+id/et_date"
         tools:layout_constraintRight_creator="1"
-        app:layout_constraintRight_toRightOf="@+id/editText8"
+        app:layout_constraintRight_toRightOf="@+id/et_publisher"
         tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="@+id/editText8" />
+        app:layout_constraintLeft_toLeftOf="@+id/et_publisher" />
 
     <EditText
-        android:id="@+id/editText11"
+        android:id="@+id/et_rating"
         android:layout_width="wrap_content"
         android:layout_height="36dp"
         android:ems="10"
         android:inputType="text"
         android:textAppearance="@android:style/TextAppearance.Material.Small"
         android:layout_marginBottom="4dp"
-        app:layout_constraintBottom_toTopOf="@+id/editText13"
+        app:layout_constraintBottom_toTopOf="@+id/et_totalpages"
         tools:layout_constraintRight_creator="1"
-        app:layout_constraintRight_toRightOf="@+id/editText12"
+        app:layout_constraintRight_toRightOf="@+id/et_date"
         tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="@+id/editText12" />
+        app:layout_constraintLeft_toLeftOf="@+id/et_date" />
 
     <EditText
-        android:id="@+id/editText13"
+        android:id="@+id/et_totalpages"
         android:layout_width="wrap_content"
         android:layout_height="36dp"
         android:ems="10"
         android:inputType="text"
         android:textAppearance="@android:style/TextAppearance.Material.Small"
         android:layout_marginBottom="4dp"
-        app:layout_constraintBottom_toTopOf="@+id/editText14"
+        app:layout_constraintBottom_toTopOf="@+id/et_currentpage"
         tools:layout_constraintRight_creator="1"
-        app:layout_constraintRight_toRightOf="@+id/editText11"
+        app:layout_constraintRight_toRightOf="@+id/et_rating"
         tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="@+id/editText11" />
+        app:layout_constraintLeft_toLeftOf="@+id/et_rating" />
 
     <EditText
-        android:id="@+id/editText12"
+        android:id="@+id/et_date"
         android:layout_width="wrap_content"
         android:layout_height="36dp"
         android:ems="10"
         android:inputType="text"
         android:textAppearance="@android:style/TextAppearance.Material.Small"
         android:layout_marginBottom="4dp"
-        app:layout_constraintBottom_toTopOf="@+id/editText11"
+        app:layout_constraintBottom_toTopOf="@+id/et_rating"
         tools:layout_constraintRight_creator="1"
-        app:layout_constraintRight_toRightOf="@+id/editText10"
+        app:layout_constraintRight_toRightOf="@+id/et_pubdate"
         tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="@+id/editText10" />
+        app:layout_constraintLeft_toLeftOf="@+id/et_pubdate" />
 
     <EditText
-        android:id="@+id/editText9"
+        android:id="@+id/et_genre"
         android:layout_width="wrap_content"
         android:layout_height="36dp"
         android:ems="10"
         android:inputType="text"
         android:textAppearance="@android:style/TextAppearance.Material.Small"
         android:layout_marginBottom="4dp"
-        app:layout_constraintBottom_toTopOf="@+id/editText8"
+        app:layout_constraintBottom_toTopOf="@+id/et_publisher"
         tools:layout_constraintRight_creator="1"
-        app:layout_constraintRight_toRightOf="@+id/editText8"
+        app:layout_constraintRight_toRightOf="@+id/et_publisher"
         tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="@+id/editText8" />
+        app:layout_constraintLeft_toLeftOf="@+id/et_publisher" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/et_title"
         android:layout_width="wrap_content"
         android:layout_height="36dp"
+        android:layout_marginBottom="4dp"
         android:ems="10"
         android:inputType="text"
         android:textAppearance="@android:style/TextAppearance.Material.Small"
-        android:layout_marginBottom="4dp"
         app:layout_constraintBottom_toTopOf="@+id/et_isbn"
-        tools:layout_constraintRight_creator="1"
+        app:layout_constraintLeft_toLeftOf="@+id/et_isbn"
         app:layout_constraintRight_toRightOf="@+id/et_isbn"
         tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="@+id/et_isbn" />
+        tools:layout_constraintRight_creator="1" />
 
 </android.support.constraint.ConstraintLayout>
