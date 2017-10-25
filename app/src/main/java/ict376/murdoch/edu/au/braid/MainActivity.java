@@ -9,6 +9,7 @@ public class MainActivity extends AppCompatActivity {
 
     MainMenuFragment mainMenuFragment;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
