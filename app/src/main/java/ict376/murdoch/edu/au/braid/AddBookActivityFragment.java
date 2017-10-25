@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-public class AddBookFragment extends Fragment {
+public class AddBookActivityFragment extends Fragment {
     //View
     boolean mDualPane;
     View mLayoutView;
@@ -17,8 +17,8 @@ public class AddBookFragment extends Fragment {
     DatabaseHelper mydb;
 
 
-    public static AddBookFragment newInstance(){
-        AddBookFragment f = new AddBookFragment();
+    public static AddBookActivityFragment newInstance(){
+        AddBookActivityFragment f = new AddBookActivityFragment();
         return f;
     }
 
@@ -34,7 +34,7 @@ public class AddBookFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        AddBookFragment addBookFragment = (AddBookFragment) getFragmentManager().findFragmentById(R.id.menu_fragment_container);
+        AddBookActivityFragment addBookFragment = (AddBookActivityFragment) getFragmentManager().findFragmentById(R.id.menu_fragment_container);
         if (addBookFragment!=null){
             addBookFragment.refresh();
         }

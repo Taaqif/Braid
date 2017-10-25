@@ -5,6 +5,7 @@ import android.app.FragmentTransaction;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,12 +44,35 @@ public class MainMenuFragment extends Fragment {
 
         mLayoutView = inflater.inflate(R.layout.fragment_main_menu, null);
 
+
+
+        return mLayoutView;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        //Setting onclick listener for the add button
+        //mButtonAdd = (Button) getActivity().findViewById(R.id.button_addBook);
+
+        super.onActivityCreated(savedInstanceState);
+
         mButtonAdd = (Button) getActivity().findViewById(R.id.button_addBook);
         mButtonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                Bundle dataBundle = new Bundle();
+                //possibly put something useful here
+                dataBundle.putInt("id", 0);
+
+                Intent intent = new Intent(getActivity().getApplicationContext(), AddBookActivity.class);
+                intent.putExtras(dataBundle);   //
+
+                startActivity(intent);
+//                intent.putExtras(dataBundle);   //
+
                 /*// Check whether the details frame is visible
-                View detailsFrame = getActivity().findViewById(R.id.menu_fragment_container);
+//                View detailsFrame = getActivity().findViewById(R.id.menu_fragment_container);
                 mDualPane = detailsFrame != null && detailsFrame.getVisibility() == View.VISIBLE;
 
                 AddBookFragment details = AddBookFragment.newInstance();
@@ -62,17 +86,6 @@ public class MainMenuFragment extends Fragment {
                 ft.commit();*/
             }
         });
-
-        return mLayoutView;
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        //Setting onclick listener for the add button
-        //mButtonAdd = (Button) getActivity().findViewById(R.id.button_addBook);
-
-        super.onActivityCreated(savedInstanceState);
-
         MainMenuFragment mainMenuFragment = (MainMenuFragment) getFragmentManager().findFragmentById(R.id.menu_fragment_container);
         if (mainMenuFragment!=null){
             mainMenuFragment.refresh();

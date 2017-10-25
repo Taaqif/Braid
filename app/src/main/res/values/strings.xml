@@ -20,5 +20,7 @@
     <string name="textView_rating">Rating:</string>
     <string name="textView_totalpages">Total Pages:</string>
     <string name="textView_currentpage">Current Page:</string>
+    <string name="title_activity_add_book">AddBookActivity</string>
+    <string name="action_settings">Settings</string>
 
 </resources>
