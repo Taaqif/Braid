@@ -47,10 +47,10 @@ public class MainMenuFragment extends Fragment {
         mButtonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Check whether the details frame is visible
+                /*// Check whether the details frame is visible
                 View detailsFrame = getActivity().findViewById(R.id.menu_fragment_container);
                 mDualPane = detailsFrame != null && detailsFrame.getVisibility() == View.VISIBLE;
-                
+
                 AddBookFragment details = AddBookFragment.newInstance();
 
                 // Execute a transaction, replacing any existing fragment
@@ -59,7 +59,7 @@ public class MainMenuFragment extends Fragment {
                 ft.replace(R.id.menu_fragment_container, details);
 
                 ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                ft.commit();
+                ft.commit();*/
             }
         });
 
