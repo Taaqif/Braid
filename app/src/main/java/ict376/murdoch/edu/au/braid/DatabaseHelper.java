@@ -7,8 +7,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+
+import static android.R.attr.id;
 
 /**
  * Database Helper class
@@ -223,5 +226,65 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if(c!=null)c.close();
         return id;
 
+    }
+
+    public void deleteBook(int id){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+
+        db.delete(BOOK_TABLE_NAME,
+                BOOK_COLUMN_ID + " = ?" ,  new String[] { Integer.toString(id) });
+
+
+        // delete contact
+        db.delete(BOOK_AUTHOR_TABLE_NAME,
+                BOOK_AUTHOR_COLUMN_BOOKID + " = ? ", new String[] { Integer.toString(id) });
+    }
+    public Book getBook(int id){
+        SQLiteDatabase db = this.getReadableDatabase();
+        //do some joins here to add author, publisher etc
+        Cursor res =  db.rawQuery( "select * from " + BOOK_TABLE_NAME + " where "+ BOOK_COLUMN_ID +" = " + id, null );
+        res.moveToFirst();
+        Book tmp = new Book(
+                res.getInt(res.getColumnIndex(BOOK_COLUMN_ID)),
+                res.getString(res.getColumnIndex(BOOK_COLUMN_TITLE)),
+                res.getString(res.getColumnIndex(BOOK_COLUMN_ISBN)),
+                res.getString(res.getColumnIndex(BOOK_COLUMN_COVER)),
+                res.getString(res.getColumnIndex(BOOK_COLUMN_CATEGORIES)),
+                res.getInt(res.getColumnIndex(BOOK_COLUMN_PUBLISHERID)),
+                res.getString(res.getColumnIndex(BOOK_COLUMN_PUBLISHED)),
+                res.getString(res.getColumnIndex(BOOK_COLUMN_ADDDATE)),
+                res.getInt(res.getColumnIndex(BOOK_COLUMN_RATING)),
+                res.getInt(res.getColumnIndex(BOOK_COLUMN_TOTALPAGES)),
+                res.getInt(res.getColumnIndex(BOOK_COLUMN_CURRENTPAGE)));
+        res.close();
+        return tmp;
+    }
+    public ArrayList<Book> getAllBooks(){
+        ArrayList<Book> array_list = new ArrayList<>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        //do some joins here to add author, publisher etc
+        Cursor res =  db.rawQuery( "select * from " + BOOK_TABLE_NAME, null );
+        res.moveToFirst();
+
+        while(!res.isAfterLast()){
+            array_list.add( new Book(
+                    res.getInt(res.getColumnIndex(BOOK_COLUMN_ID)),
+                    res.getString(res.getColumnIndex(BOOK_COLUMN_TITLE)),
+                    res.getString(res.getColumnIndex(BOOK_COLUMN_ISBN)),
+                    res.getString(res.getColumnIndex(BOOK_COLUMN_COVER)),
+                    res.getString(res.getColumnIndex(BOOK_COLUMN_CATEGORIES)),
+                    res.getInt(res.getColumnIndex(BOOK_COLUMN_PUBLISHERID)),
+                    res.getString(res.getColumnIndex(BOOK_COLUMN_PUBLISHED)),
+                    res.getString(res.getColumnIndex(BOOK_COLUMN_ADDDATE)),
+                    res.getInt(res.getColumnIndex(BOOK_COLUMN_RATING)),
+                    res.getInt(res.getColumnIndex(BOOK_COLUMN_TOTALPAGES)),
+                    res.getInt(res.getColumnIndex(BOOK_COLUMN_CURRENTPAGE))
+            ) );
+            res.moveToNext();
+        }
+        res.close();
+        return array_list;
     }
 }
