@@ -79,8 +79,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "? integer, " +
                 "? integer, " +
                 "? integer,  " +
-                "? integer) " +
-                "foreign key (?) references ?(?)", new String[]{
+                "? integer, " +
+                "foreign key (?) references ?(?))", new String[]{
                 BOOK_TABLE_NAME,
                 BOOK_COLUMN_ID,
                 BOOK_COLUMN_TITLE,
@@ -112,10 +112,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         sqLiteDatabase.execSQL("create table ? (" +
                 "? integer primary key autoincrement," +
-                "? text) " +
+                "? text, " +
                 "primary key (?, ?)," +
-                "foreign key (?) references ?(?)" +
-                "foreign key (?) references ?(?)", new String[]{
+                "foreign key (?) references ?(?)," +
+                "foreign key (?) references ?(?))", new String[]{
                 BOOK_AUTHOR_TABLE_NAME,
                 BOOK_AUTHOR_COLUMN_BOOKID,
                 BOOK_AUTHOR_COLUMN_AUTHORID,
