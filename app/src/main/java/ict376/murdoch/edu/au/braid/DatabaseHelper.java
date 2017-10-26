@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -68,65 +69,37 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL("create table ? (" +
-                "? integer primary key autoincrement, " +
-                "? text, " +
-                "? text UNIQUE, " +
-                "? text, " +
-                "? text, " +
-                "? text, " +
-                "? text, " +
-                "? integer, " +
-                "? integer, " +
-                "? integer,  " +
-                "? integer, " +
-                "foreign key (?) references ?(?))", new String[]{
-                BOOK_TABLE_NAME,
-                BOOK_COLUMN_ID,
-                BOOK_COLUMN_TITLE,
-                BOOK_COLUMN_ISBN,
-                BOOK_COLUMN_COVER,
-                BOOK_COLUMN_CATEGORIES,
-                BOOK_COLUMN_PUBLISHED,
-                BOOK_COLUMN_ADDDATE,
-                BOOK_COLUMN_RATING,
-                BOOK_COLUMN_TOTALPAGES,
-                BOOK_COLUMN_CURRENTPAGE,
-                BOOK_COLUMN_PUBLISHERID,
-                PUBLISHER_TABLE_NAME,
-                PUBLISHER_COLUMN_ID});
+        sqLiteDatabase.execSQL("create table "+ PUBLISHER_TABLE_NAME +" (" +
+                PUBLISHER_COLUMN_ID +" integer primary key," +
+                PUBLISHER_COLUMN_NAME + " text UNIQUE) ");
 
-        sqLiteDatabase.execSQL("create table ? (" +
-                "? integer primary key autoincrement, " +
-                "? text UNIQUE) ", new String[]{
-                AUTHOR_TABLE_NAME,
-                AUTHOR_COLUMN_ID,
-                AUTHOR_COLUMN_NAME});
+        sqLiteDatabase.execSQL("create table "+ AUTHOR_TABLE_NAME +" (" +
+                AUTHOR_COLUMN_ID + " integer primary key, " +
+                AUTHOR_COLUMN_NAME + " text UNIQUE) ");
 
-        sqLiteDatabase.execSQL("create table ? (" +
-                "? integer primary key autoincrement," +
-                "? text UNIQUE) ", new String[]{
-                PUBLISHER_TABLE_NAME,
-                PUBLISHER_COLUMN_ID,
-                PUBLISHER_COLUMN_NAME});
+        sqLiteDatabase.execSQL("create table "+ BOOK_TABLE_NAME +" (" +
+                BOOK_COLUMN_ID +" integer primary key, " +
+                BOOK_COLUMN_TITLE + " text UNIQUE, " +
+                BOOK_COLUMN_ISBN + " text, " +
+                BOOK_COLUMN_COVER + " text, " +
+                BOOK_COLUMN_CATEGORIES + " text, " +
+                BOOK_COLUMN_PUBLISHED + " text, " +
+                BOOK_COLUMN_PUBLISHERID + " integer, " +
+                BOOK_COLUMN_ADDDATE + " integer, " +
+                BOOK_COLUMN_RATING + " integer, " +
+                BOOK_COLUMN_TOTALPAGES + " integer,  " +
+                BOOK_COLUMN_CURRENTPAGE + " integer, " +
+                "foreign key ("+ BOOK_COLUMN_PUBLISHERID +") references "+ PUBLISHER_TABLE_NAME +"(" + PUBLISHER_COLUMN_ID + "))");
 
-        sqLiteDatabase.execSQL("create table ? (" +
-                "? integer primary key autoincrement," +
-                "? text, " +
-                "primary key (?, ?), " +
-                "foreign key (?) references ?(?), " +
-                "foreign key (?) references ?(?))", new String[]{
-                BOOK_AUTHOR_TABLE_NAME,
-                BOOK_AUTHOR_COLUMN_BOOKID,
-                BOOK_AUTHOR_COLUMN_AUTHORID,
-                BOOK_AUTHOR_COLUMN_BOOKID,
-                BOOK_AUTHOR_COLUMN_AUTHORID,
-                BOOK_AUTHOR_COLUMN_BOOKID,
-                BOOK_TABLE_NAME,
-                BOOK_COLUMN_ID,
-                BOOK_AUTHOR_COLUMN_AUTHORID,
-                AUTHOR_TABLE_NAME,
-                AUTHOR_COLUMN_ID});
+
+
+
+        sqLiteDatabase.execSQL("create table "+BOOK_AUTHOR_TABLE_NAME+" (" +
+                BOOK_AUTHOR_COLUMN_BOOKID+ " integer," +
+                BOOK_AUTHOR_COLUMN_AUTHORID+" integer, " +
+                "primary key ("+ BOOK_AUTHOR_COLUMN_BOOKID +", "+ BOOK_AUTHOR_COLUMN_AUTHORID +"), " +
+                "foreign key ("+ BOOK_AUTHOR_COLUMN_BOOKID +") references "+ BOOK_TABLE_NAME +"("+ BOOK_COLUMN_ID +"), " +
+                "foreign key ("+ BOOK_AUTHOR_COLUMN_AUTHORID +") references "+ AUTHOR_TABLE_NAME +"("+ AUTHOR_COLUMN_ID +"))");
 
     }
 
@@ -175,17 +148,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
             return true;
         }
+        Log.d("st", "he");
         return false;
     }
 
     private int getPublisherID(String name) {
         SQLiteDatabase db = this.getWritableDatabase();
         int id;
-        Cursor c = db.rawQuery("SELECT ? FROM ? WHERE ? = ?", new String[]{
-                PUBLISHER_COLUMN_ID,
-                PUBLISHER_TABLE_NAME,
-                PUBLISHER_TABLE_NAME,
-                name});
+        Cursor c = db.rawQuery("SELECT "+ PUBLISHER_COLUMN_ID +" FROM "+ PUBLISHER_TABLE_NAME +" WHERE "+ PUBLISHER_COLUMN_NAME +" = '"+ name +"'" ,null);
 
         //if the id is found, return it
         if(c!=null && c.getCount()>0){
@@ -206,11 +176,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private int getAuthorID(String name) {
         SQLiteDatabase db = this.getWritableDatabase();
         int id;
-        Cursor c = db.rawQuery("SELECT ? FROM ? WHERE ? = ?", new String[]{
-                AUTHOR_COLUMN_ID,
-                AUTHOR_TABLE_NAME,
-                AUTHOR_TABLE_NAME,
-                name});
+        Cursor c = db.rawQuery("SELECT "+ AUTHOR_COLUMN_ID +" FROM "+ AUTHOR_TABLE_NAME +" WHERE "+ AUTHOR_COLUMN_NAME +" = '"+ name + "'", null);
 
         //if the id is found, return it
         if(c!=null && c.getCount()>0){
@@ -233,17 +199,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
         db.delete(BOOK_TABLE_NAME,
-                BOOK_COLUMN_ID + " = ?" ,  new String[] { Integer.toString(id) });
+                BOOK_COLUMN_ID + " = "+ Integer.toString(id) +"" ,  null);
 
 
         // delete contact
         db.delete(BOOK_AUTHOR_TABLE_NAME,
-                BOOK_AUTHOR_COLUMN_BOOKID + " = ? ", new String[] { Integer.toString(id) });
+                BOOK_AUTHOR_COLUMN_BOOKID + " = "+ Integer.toString(id) +" ", null);
     }
     public Book getBook(int id){
         SQLiteDatabase db = this.getReadableDatabase();
         //do some joins here to add author, publisher etc
-        Cursor res =  db.rawQuery( "select * from " + BOOK_TABLE_NAME + " where "+ BOOK_COLUMN_ID +" = " + id, null );
+        Cursor res =  db.rawQuery( "select * from " + BOOK_TABLE_NAME + " where "+ BOOK_COLUMN_ID +" = '" + id + "'", null );
         res.moveToFirst();
         Book tmp = new Book(
                 res.getInt(res.getColumnIndex(BOOK_COLUMN_ID)),
