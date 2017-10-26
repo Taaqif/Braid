@@ -69,7 +69,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL("create table ? (" +
-                "? integer primary key autoincrement," +
+                "? integer primary key autoincrement, " +
                 "? text, " +
                 "? text UNIQUE, " +
                 "? text, " +
@@ -97,7 +97,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 PUBLISHER_COLUMN_ID});
 
         sqLiteDatabase.execSQL("create table ? (" +
-                "? integer primary key autoincrement," +
+                "? integer primary key autoincrement, " +
                 "? text UNIQUE) ", new String[]{
                 AUTHOR_TABLE_NAME,
                 AUTHOR_COLUMN_ID,
@@ -113,8 +113,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("create table ? (" +
                 "? integer primary key autoincrement," +
                 "? text, " +
-                "primary key (?, ?)," +
-                "foreign key (?) references ?(?)," +
+                "primary key (?, ?), " +
+                "foreign key (?) references ?(?), " +
                 "foreign key (?) references ?(?))", new String[]{
                 BOOK_AUTHOR_TABLE_NAME,
                 BOOK_AUTHOR_COLUMN_BOOKID,
