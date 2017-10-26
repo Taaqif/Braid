@@ -140,6 +140,7 @@ public class AddBookActivityFragment extends Fragment {
         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
                 Uri.fromFile(photo));
         imageUri = Uri.fromFile(photo);
+        takePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         getActivity().startActivityForResult(takePictureIntent, 100);
     }
 
