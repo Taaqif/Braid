@@ -10,6 +10,7 @@ import android.util.Log;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import static android.R.attr.id;
@@ -226,8 +227,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         res.close();
         return tmp;
     }
-    public ArrayList<Book> getAllBooks(){
-        ArrayList<Book> array_list = new ArrayList<>();
+    public List<Book> getAllBooks(){
+        List<Book> array_list = new ArrayList<>();
 
         SQLiteDatabase db = this.getReadableDatabase();
         //do some joins here to add author, publisher etc

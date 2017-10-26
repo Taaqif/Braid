@@ -31,6 +31,7 @@ public class MainMenuFragment extends Fragment {
 
     //Buttons
     Button mButtonAdd;
+    Button mButtonShowAll;
 
 
     public static MainMenuFragment newInstance(){
@@ -84,6 +85,23 @@ public class MainMenuFragment extends Fragment {
 
                 ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 ft.commit();*/
+            }
+        });
+
+        mButtonShowAll = (Button) getActivity().findViewById(R.id.button_showAll);
+        mButtonShowAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Bundle dataBundle = new Bundle();
+                //possibly put something useful here
+                dataBundle.putInt("id", 0);
+
+                Intent intent = new Intent(getActivity().getApplicationContext(), BookDisplayActivity.class);
+                intent.putExtras(dataBundle);   //
+
+                startActivity(intent);
+
             }
         });
         MainMenuFragment mainMenuFragment = (MainMenuFragment) getFragmentManager().findFragmentById(R.id.menu_fragment_container);

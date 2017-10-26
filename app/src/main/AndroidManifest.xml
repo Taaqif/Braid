@@ -19,7 +19,8 @@
         <activity
             android:name=".AddBookActivity"
             android:label="@string/title_activity_add_book"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".BookDisplayActivity"></activity>
     </application>
 
 </manifest>
