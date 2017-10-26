@@ -51,7 +51,9 @@ public class AddBookActivityFragment extends Fragment {
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
+
         super.onActivityCreated(savedInstanceState);
+        mydb = new DatabaseHelper(getActivity());
 
         AddBookActivityFragment addBookFragment = (AddBookActivityFragment) getFragmentManager().findFragmentById(R.id.menu_fragment_container);
         if (addBookFragment!=null){
@@ -69,7 +71,6 @@ public class AddBookActivityFragment extends Fragment {
         mGenre = (EditText) getActivity().findViewById(R.id.et_genre);
         mPublisher = (EditText) getActivity().findViewById(R.id.et_publisher);
         mDatePub = (EditText) getActivity().findViewById(R.id.et_pubdate);
-        mDate = (EditText) getActivity().findViewById(R.id.et_date);
         mRating = (EditText) getActivity().findViewById(R.id.et_rating);
         mTotalPages = (EditText) getActivity().findViewById(R.id.et_totalpages);
         mCurrentPage = (EditText) getActivity().findViewById(R.id.et_currentpage);
@@ -84,13 +85,18 @@ public class AddBookActivityFragment extends Fragment {
                 String genre = mGenre.getText().toString();
                 String publisher = mPublisher.getText().toString();
                 String datepub = mDatePub.getText().toString();
-                String date = mDate.getText().toString();
-                String rating = mRating.getText().toString();
-                String totalpages = mTotalPages.getText().toString();
-                String currentpage = mCurrentPage.getText().toString();
+                int rating = Integer.parseInt(mRating.getText().toString());
+                int totalpages = Integer.parseInt(mTotalPages.getText().toString());
+                int currentpage = Integer.parseInt(mCurrentPage.getText().toString());
 
+                //TODO Fix author in the fragment and here, Forgot to add author field into the fragment
+                //Temp author to test input
+                String[] author = {"Jim", "Jeff"};
+
+                mydb.insertBook(title, isbn, cover, genre, author, publisher, datepub, rating, totalpages, currentpage);
                 //Test print
-                Log.d("myTag", title+" "+isbn+" "+cover+" "+genre+" "+publisher+" "+datepub+" "+date+" "+rating+" "+totalpages+" "+currentpage);
+                //Log.d("myTag", mydb.getAllBooks().toString());
+                Log.d("myTag", title+" "+isbn+" "+cover+" "+genre+" "+author+" "+publisher+" "+datepub+" "+" "+rating+" "+totalpages+" "+currentpage);
             }
         });
     }
