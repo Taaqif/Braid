@@ -13,6 +13,7 @@
     <string name="textView_title">Title:</string>
     <string name="textView_isbn">ISBN:</string>
     <string name="textView_cover">Cover:</string>
+    <string name="textView_author">Author(s):</string>
     <string name="textView_categorie">Genre:</string>
     <string name="textView_publisher">Publisher:</string>
     <string name="textView_publisheddate">Date Published:</string>

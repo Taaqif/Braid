@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
 import android.support.v4.view.PagerAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,6 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 
 public class AddBookActivityFragment extends Fragment {
     //View
@@ -56,6 +59,7 @@ public class AddBookActivityFragment extends Fragment {
     static final int REQUEST_IMAGE_CAPTURE = 1;
     String mCurrentPhotoPath;
     Uri imageUri;
+    File output = null;
 
 
     public static AddBookActivityFragment newInstance(){
@@ -90,7 +94,6 @@ public class AddBookActivityFragment extends Fragment {
         //Assign name to each edit text
         mTitle = (EditText) getActivity().findViewById(R.id.et_title);
         mIsbn = (EditText) getActivity().findViewById(R.id.et_isbn);
-        mCover = (EditText) getActivity().findViewById(R.id.et_cover);
         mGenre = (EditText) getActivity().findViewById(R.id.et_genre);
         mPublisher = (EditText) getActivity().findViewById(R.id.et_publisher);
         mDatePub = (EditText) getActivity().findViewById(R.id.et_pubdate);
@@ -106,7 +109,7 @@ public class AddBookActivityFragment extends Fragment {
                 //Getting all the values from the edit texts
                 String title = mTitle.getText().toString();
                 String isbn = mIsbn.getText().toString();
-                String cover = mCover.getText().toString();
+                String cover = mCurrentPhotoPath;
                 String genre = mGenre.getText().toString();
                 String publisher = mPublisher.getText().toString();
                 String datepub = mDatePub.getText().toString();
@@ -135,7 +138,7 @@ public class AddBookActivityFragment extends Fragment {
     }
 
     //Method to open the camera
-    public void takePhoto(){
+    public void takePhoto1(){
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
@@ -147,10 +150,47 @@ public class AddBookActivityFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            mCoverThumbnail.setImageBitmap(imageBitmap);
+            Bitmap myBitmap = BitmapFactory.decodeFile(mCurrentPhotoPath);
+            mCoverThumbnail.setImageBitmap(myBitmap);
         }
+    }
+
+    private void takePhoto() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(getActivity().getApplicationContext(),
+                        "ict376.murdoch.edu.au.braid",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
+        }
+    }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,   /*prefix*/
+                ".jpg",          /*suffix*/
+                storageDir       /*directory*/
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
     }
 
 
