@@ -34,6 +34,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String BOOK_COLUMN_COVER            = "cover";
     private static final String BOOK_COLUMN_CATEGORIES       = "categories";
     private static final String BOOK_COLUMN_PUBLISHERID      = "publisher_id";
+    private static final String BOOK_COLUMN_STATUS           = "status";
     private static final String BOOK_COLUMN_PUBLISHED        = "publishedDate";
     private static final String BOOK_COLUMN_ADDDATE          = "addedDate";
     private static final String BOOK_COLUMN_RATING           = "rating";
@@ -86,6 +87,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 BOOK_COLUMN_CATEGORIES + " text, " +
                 BOOK_COLUMN_PUBLISHED + " text, " +
                 BOOK_COLUMN_PUBLISHERID + " integer, " +
+                BOOK_COLUMN_STATUS + " integer, " +
                 BOOK_COLUMN_ADDDATE + " integer, " +
                 BOOK_COLUMN_RATING + " integer, " +
                 BOOK_COLUMN_TOTALPAGES + " integer,  " +
@@ -233,6 +235,60 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         //do some joins here to add author, publisher etc
         Cursor res =  db.rawQuery( "select * from " + BOOK_TABLE_NAME, null );
+        res.moveToFirst();
+
+        while(!res.isAfterLast()){
+            array_list.add( new Book(
+                    res.getInt(res.getColumnIndex(BOOK_COLUMN_ID)),
+                    res.getString(res.getColumnIndex(BOOK_COLUMN_TITLE)),
+                    res.getString(res.getColumnIndex(BOOK_COLUMN_ISBN)),
+                    res.getString(res.getColumnIndex(BOOK_COLUMN_COVER)),
+                    res.getString(res.getColumnIndex(BOOK_COLUMN_CATEGORIES)),
+                    res.getInt(res.getColumnIndex(BOOK_COLUMN_PUBLISHERID)),
+                    res.getString(res.getColumnIndex(BOOK_COLUMN_PUBLISHED)),
+                    res.getString(res.getColumnIndex(BOOK_COLUMN_ADDDATE)),
+                    res.getInt(res.getColumnIndex(BOOK_COLUMN_RATING)),
+                    res.getInt(res.getColumnIndex(BOOK_COLUMN_TOTALPAGES)),
+                    res.getInt(res.getColumnIndex(BOOK_COLUMN_CURRENTPAGE))
+            ) );
+            res.moveToNext();
+        }
+        res.close();
+        return array_list;
+    }
+    public List<Book> getReadBooks(){
+        List<Book> array_list = new ArrayList<>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        //do some joins here to add author, publisher etc
+        Cursor res =  db.rawQuery( "select * from " + BOOK_TABLE_NAME + " where " + BOOK_COLUMN_CURRENTPAGE + " = "+ BOOK_COLUMN_TOTALPAGES  +"", null );
+        res.moveToFirst();
+
+        while(!res.isAfterLast()){
+            array_list.add( new Book(
+                    res.getInt(res.getColumnIndex(BOOK_COLUMN_ID)),
+                    res.getString(res.getColumnIndex(BOOK_COLUMN_TITLE)),
+                    res.getString(res.getColumnIndex(BOOK_COLUMN_ISBN)),
+                    res.getString(res.getColumnIndex(BOOK_COLUMN_COVER)),
+                    res.getString(res.getColumnIndex(BOOK_COLUMN_CATEGORIES)),
+                    res.getInt(res.getColumnIndex(BOOK_COLUMN_PUBLISHERID)),
+                    res.getString(res.getColumnIndex(BOOK_COLUMN_PUBLISHED)),
+                    res.getString(res.getColumnIndex(BOOK_COLUMN_ADDDATE)),
+                    res.getInt(res.getColumnIndex(BOOK_COLUMN_RATING)),
+                    res.getInt(res.getColumnIndex(BOOK_COLUMN_TOTALPAGES)),
+                    res.getInt(res.getColumnIndex(BOOK_COLUMN_CURRENTPAGE))
+            ) );
+            res.moveToNext();
+        }
+        res.close();
+        return array_list;
+    }
+    public List<Book> getUnreadBooks(){
+        List<Book> array_list = new ArrayList<>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        //do some joins here to add author, publisher etc
+        Cursor res =  db.rawQuery( "select * from " + BOOK_TABLE_NAME + " where " + BOOK_COLUMN_CURRENTPAGE + " < "+ BOOK_COLUMN_TOTALPAGES  +"", null );
         res.moveToFirst();
 
         while(!res.isAfterLast()){

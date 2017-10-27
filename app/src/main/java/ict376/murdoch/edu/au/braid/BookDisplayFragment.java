@@ -20,9 +20,9 @@ import android.view.ViewGroup;
 public class BookDisplayFragment extends Fragment {
 
     // TODO: Customize parameter argument names
-    private static final String ARG_COLUMN_COUNT = "column-count";
+    private static final String BOOK_STATUS = "column-count";
     // TODO: Customize parameters
-    private int mColumnCount = 1;
+    private int mBookStatus = 1;
     private OnListFragmentInteractionListener mListener;
 
     /**
@@ -34,10 +34,10 @@ public class BookDisplayFragment extends Fragment {
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static BookDisplayFragment newInstance(int columnCount) {
+    public static BookDisplayFragment newInstance(int status) {
         BookDisplayFragment fragment = new BookDisplayFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
+        args.putInt(BOOK_STATUS, status);
         fragment.setArguments(args);
         return fragment;
     }
@@ -47,7 +47,7 @@ public class BookDisplayFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+            mBookStatus = getArguments().getInt(BOOK_STATUS);
         }
     }
 
@@ -57,16 +57,32 @@ public class BookDisplayFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_book_display_list, container, false);
         DatabaseHelper mydb = new DatabaseHelper(getActivity());
 
+        //get the variable here.
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+            switch (mBookStatus){
+                case 1:
+                    recyclerView.setAdapter(new BookViewAdapter(mydb.getAllBooks(), mListener));
+                    break;
+                case 2:
+                    recyclerView.setAdapter(new BookViewAdapter(mydb.getReadBooks(), mListener));
+                    break;
+                case 3:
+                    recyclerView.setAdapter(new BookViewAdapter(mydb.getAllBooks(), mListener));
+                    break;
+                default:
+                    recyclerView.setAdapter(new BookViewAdapter(mydb.getAllBooks(), mListener));
+
+
             }
-            recyclerView.setAdapter(new BookViewAdapter(mydb.getAllBooks(), mListener));
+//            if (mBookStatus <= 1) {
+//                recyclerView.setLayoutManager(new LinearLayoutManager(context));
+//            } else {
+//                recyclerView.setLayoutManager(new GridLayoutManager(context, mBookStatus));
+//            }
+//            recyclerView.setAdapter(new BookViewAdapter(mydb.getAllBooks(), mListener));
         }
         return view;
     }

@@ -23,5 +23,7 @@
     <string name="textView_currentpage">Current Page:</string>
     <string name="title_activity_add_book">AddBookActivity</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_book_tabbed_display">BookTabbedDisplayActivity</string>
+    <string name="section_format">Hello World from section: %1$d</string>
 
 </resources>

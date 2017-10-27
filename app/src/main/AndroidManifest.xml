@@ -20,7 +20,7 @@
             android:name=".AddBookActivity"
             android:label="@string/title_activity_add_book"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".BookDisplayActivity"></activity>
+        <activity android:name=".BookDisplayActivity" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -29,9 +29,13 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
 
+        <activity
+            android:name=".BookTabbedDisplayActivity"
+            android:label="@string/title_activity_book_tabbed_display"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
