@@ -28,5 +28,35 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="60dp" />
+
+        <Button
+            android:id="@+id/button_reading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/button_showAll"
+            android:layout_alignRight="@+id/button_showAll"
+            android:layout_below="@+id/button_addBook"
+            android:layout_marginTop="25dp"
+            android:text="@string/button_reading" />
+
+        <Button
+            android:id="@+id/button_toBeRead"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_toBeRead"
+            android:layout_marginTop="24dp"
+            android:layout_below="@+id/button_reading"
+            android:layout_alignLeft="@+id/button_showAll"
+            android:layout_alignStart="@+id/button_showAll" />
+
+        <Button
+            android:id="@+id/button_completed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_completed"
+            android:layout_below="@+id/button_toBeRead"
+            android:layout_alignLeft="@+id/button_toBeRead"
+            android:layout_alignStart="@+id/button_toBeRead"
+            android:layout_marginTop="22dp" />
     </RelativeLayout>
 </ScrollView>

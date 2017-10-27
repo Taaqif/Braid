@@ -209,6 +209,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.delete(BOOK_AUTHOR_TABLE_NAME,
                 BOOK_AUTHOR_COLUMN_BOOKID + " = "+ Integer.toString(id) +" ", null);
     }
+
     public Book getBook(int id){
         SQLiteDatabase db = this.getReadableDatabase();
         //do some joins here to add author, publisher etc
@@ -229,6 +230,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         res.close();
         return tmp;
     }
+
     public List<Book> getAllBooks(){
         List<Book> array_list = new ArrayList<>();
 
