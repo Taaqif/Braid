@@ -264,17 +264,17 @@
         android:id="@+id/et_pubdate"
         android:layout_width="wrap_content"
         android:layout_height="36dp"
+        android:layout_marginTop="1dp"
         android:ems="10"
         android:hint="Date Published"
-        android:inputType="text"
+        android:inputType="date"
         android:textAppearance="@android:style/TextAppearance.Material.Small"
-        tools:layout_constraintTop_creator="1"
-        tools:layout_constraintRight_creator="1"
+        app:layout_constraintLeft_toLeftOf="@+id/et_publisher"
         app:layout_constraintRight_toRightOf="@+id/et_publisher"
-        android:layout_marginTop="1dp"
         app:layout_constraintTop_toBottomOf="@+id/et_publisher"
         tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="@+id/et_publisher" />
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1" />
 
     <EditText
         android:id="@+id/et_rating"
@@ -284,12 +284,13 @@
         android:hint="Rating"
         android:inputType="number"
         android:textAppearance="@android:style/TextAppearance.Material.Small"
-        tools:layout_constraintTop_creator="1"
-        tools:layout_constraintRight_creator="1"
+        app:layout_constraintLeft_toLeftOf="@+id/et_pubdate"
         app:layout_constraintRight_toRightOf="@+id/et_pubdate"
         app:layout_constraintTop_toBottomOf="@+id/et_pubdate"
         tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="@+id/et_pubdate" />
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1"
+        tools:text="0" />
 
     <EditText
         android:id="@+id/et_totalpages"
@@ -299,12 +300,13 @@
         android:hint="Total Pages"
         android:inputType="number"
         android:textAppearance="@android:style/TextAppearance.Material.Small"
-        tools:layout_constraintTop_creator="1"
-        tools:layout_constraintRight_creator="1"
+        app:layout_constraintLeft_toLeftOf="@+id/et_rating"
         app:layout_constraintRight_toRightOf="@+id/et_rating"
         app:layout_constraintTop_toBottomOf="@+id/et_rating"
         tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="@+id/et_rating" />
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1"
+        tools:text="0" />
 
     <EditText
         android:id="@+id/et_genre"
