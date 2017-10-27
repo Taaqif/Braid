@@ -43,6 +43,11 @@ public class BookViewAdapter extends RecyclerView.Adapter<BookViewAdapter.ViewHo
         //this is where you se the book details
         holder.mTitleView.setText(mValues.get(position).getTitle());
         holder.mAuthorView.setText(mValues.get(position).getTitle());
+        holder.mDateView.setText(mValues.get(position).getAddedDate());
+
+        int totalpages = mValues.get(position).getTotalPages();
+        int currentpage = mValues.get(position).getCurrentPages();
+        holder.mPageView.setText("Page: " + currentpage + " of " + totalpages);
 
         Bitmap coverPath = BitmapFactory.decodeFile(mValues.get(position).getCover());
         holder.mCoverView.setImageBitmap(coverPath);
@@ -69,6 +74,8 @@ public class BookViewAdapter extends RecyclerView.Adapter<BookViewAdapter.ViewHo
         public final TextView mTitleView;
         public final TextView mAuthorView;
         public final ImageView mCoverView;
+        public final TextView mDateView;
+        public final TextView mPageView;
         public Book mItem;
 
         public ViewHolder(View view) {
@@ -77,6 +84,8 @@ public class BookViewAdapter extends RecyclerView.Adapter<BookViewAdapter.ViewHo
             mTitleView = (TextView) view.findViewById(R.id.Title);
             mAuthorView = (TextView) view.findViewById(R.id.author);
             mCoverView = (ImageView) view.findViewById(R.id.cover);
+            mDateView = (TextView) view.findViewById(R.id.dateAdded);
+            mPageView = (TextView) view.findViewById(R.id.pageRange);
         }
 
         @Override

@@ -52,11 +52,18 @@
                 android:text="Page x of x" />
 
             <TextView
-                android:id="@+id/addedDate"
+                android:id="@+id/added"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20sp"
-                android:text="Added: 2017-10-01" />
+                android:text="Added: " />
+
+            <TextView
+                android:id="@+id/dateAdded"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20sp"
+                android:layout_weight="1" />
         </LinearLayout>
 
     </LinearLayout>

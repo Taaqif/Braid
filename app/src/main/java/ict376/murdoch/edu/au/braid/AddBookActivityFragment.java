@@ -1,7 +1,6 @@
 package ict376.murdoch.edu.au.braid;
 
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,7 +10,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
-import android.support.v4.view.PagerAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +18,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,7 +37,7 @@ public class AddBookActivityFragment extends Fragment {
     //Fields for adding a book
     EditText mTitle;
     EditText mIsbn;
-    EditText mCover;
+    EditText mAuthor;
     EditText mGenre;
     EditText mPublisher;
     EditText mDatePub;
@@ -95,6 +92,7 @@ public class AddBookActivityFragment extends Fragment {
         mTitle = (EditText) getActivity().findViewById(R.id.et_title);
         mIsbn = (EditText) getActivity().findViewById(R.id.et_isbn);
         mGenre = (EditText) getActivity().findViewById(R.id.et_genre);
+        mAuthor = (EditText) getActivity().findViewById(R.id.et_author);
         mPublisher = (EditText) getActivity().findViewById(R.id.et_publisher);
         mDatePub = (EditText) getActivity().findViewById(R.id.et_pubdate);
         mRating = (EditText) getActivity().findViewById(R.id.et_rating);
@@ -110,6 +108,7 @@ public class AddBookActivityFragment extends Fragment {
                 String title = mTitle.getText().toString();
                 String isbn = mIsbn.getText().toString();
                 String cover = mCurrentPhotoPath;
+                String author = mAuthor.getText().toString();
                 String genre = mGenre.getText().toString();
                 String publisher = mPublisher.getText().toString();
                 String datepub = mDatePub.getText().toString();
@@ -117,14 +116,13 @@ public class AddBookActivityFragment extends Fragment {
                 int totalpages = Integer.parseInt(mTotalPages.getText().toString());
                 int currentpage = Integer.parseInt(mCurrentPage.getText().toString());
 
-                //TODO Fix author in the fragment and here, Forgot to add author field into the fragment
-                //Temp author to test input
-                String[] author = {"Jim", "Jeff"};
+                //TODO Check if this is right not sure how the insert for author works
+                String authorArray[] = author.split("\\,");
 
-                mydb.insertBook(title, isbn, cover, genre, author, publisher, datepub, rating, totalpages, currentpage);
+                mydb.insertBook(title, isbn, cover, genre, authorArray, publisher, datepub, rating, totalpages, currentpage);
                 //Test print
                 //Log.d("myTag", mydb.getAllBooks().toString());
-                Log.d("myTag", title+" "+isbn+" "+cover+" "+genre+" "+author+" "+publisher+" "+datepub+" "+" "+rating+" "+totalpages+" "+currentpage);
+                //Log.d("myTag", title+" "+isbn+" "+cover+" "+genre+" "+author+" "+publisher+" "+datepub+" "+" "+rating+" "+totalpages+" "+currentpage);
             }
         });
 
@@ -135,14 +133,6 @@ public class AddBookActivityFragment extends Fragment {
                 takePhoto();
             }
         });
-    }
-
-    //Method to open the camera
-    public void takePhoto1(){
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-        }
     }
 
     //For the taking photo
