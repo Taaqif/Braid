@@ -120,6 +120,7 @@ public class AddBookActivityFragment extends Fragment {
                 String authorArray[] = author.split("\\,");
 
                 mydb.insertBook(title, isbn, cover, genre, authorArray, publisher, datepub, rating, totalpages, currentpage);
+                getActivity().finish();
                 //Test print
                 //Log.d("myTag", mydb.getAllBooks().toString());
                 //Log.d("myTag", title+" "+isbn+" "+cover+" "+genre+" "+author+" "+publisher+" "+datepub+" "+" "+rating+" "+totalpages+" "+currentpage);

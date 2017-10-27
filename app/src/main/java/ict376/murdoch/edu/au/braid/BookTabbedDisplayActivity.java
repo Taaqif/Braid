@@ -69,7 +69,11 @@ public class BookTabbedDisplayActivity extends AppCompatActivity implements Book
 
     }
 
-
+    @Override
+    public void onResume(){
+        super.onResume();
+        //refresh content here 
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
