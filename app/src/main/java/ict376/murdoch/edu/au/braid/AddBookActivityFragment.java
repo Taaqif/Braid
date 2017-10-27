@@ -18,11 +18,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import static android.R.attr.data;
 
 
 public class AddBookActivityFragment extends Fragment {
@@ -120,9 +123,8 @@ public class AddBookActivityFragment extends Fragment {
                 String authorArray[] = author.split("\\,");
 
                 mydb.insertBook(title, isbn, cover, genre, authorArray, publisher, datepub, rating, totalpages, currentpage);
-                //Test print
-                //Log.d("myTag", mydb.getAllBooks().toString());
-                //Log.d("myTag", title+" "+isbn+" "+cover+" "+genre+" "+author+" "+publisher+" "+datepub+" "+" "+rating+" "+totalpages+" "+currentpage);
+                Toast.makeText(getActivity(), "You added a book!",
+                        Toast.LENGTH_LONG).show();
             }
         });
 
