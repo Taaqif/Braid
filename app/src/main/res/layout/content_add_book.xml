@@ -4,6 +4,7 @@
     android:id="@+id/fragment"
     android:name="ict376.murdoch.edu.au.braid.AddBookActivityFragment"
     android:layout_width="match_parent"
+    android:background="#efd9b8"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:layout="@layout/fragment_add_book" />

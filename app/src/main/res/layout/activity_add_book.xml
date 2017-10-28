@@ -11,15 +11,17 @@
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
-
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_add_book" />
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        app:srcCompat="@drawable/braid" />
+
+    <include
+        layout="@layout/content_add_book"
+        android:layout_height="452dp"
+        tools:layout_editor_absoluteY="115dp" />
 
 </android.support.design.widget.CoordinatorLayout>

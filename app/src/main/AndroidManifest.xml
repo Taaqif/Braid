@@ -8,8 +8,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".BookTabbedDisplayActivity" android:theme="@style/AppTheme.NoActionBar">>
+        android:theme="@style/no_title">
+        <activity android:name=".BookTabbedDisplayActivity" android:theme="@style/no_title">>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -19,7 +19,7 @@
         <activity
             android:name=".AddBookActivity"
             android:label="@string/title_activity_add_book"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/no_title" />
         <activity android:name=".BookDisplayActivity" />
 
         <provider

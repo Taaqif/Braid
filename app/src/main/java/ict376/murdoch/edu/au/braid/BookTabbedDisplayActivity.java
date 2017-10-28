@@ -42,8 +42,8 @@ public class BookTabbedDisplayActivity extends AppCompatActivity implements Book
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_tabbed_display);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
