@@ -6,22 +6,33 @@
     android:layout_height="match_parent"
     tools:context="ict376.murdoch.edu.au.braid.AddBookActivity">
 
-    <android.support.design.widget.AppBarLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:orientation="vertical">
 
-    </android.support.design.widget.AppBarLayout>
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:theme="@style/AppTheme.AppBarOverlay">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        app:srcCompat="@drawable/braid" />
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/braid" />
 
-    <include
-        layout="@layout/content_add_book"
-        android:layout_height="452dp"
-        tools:layout_editor_absoluteY="115dp" />
+        </android.support.design.widget.AppBarLayout>
+
+        <fragment
+            android:id="@+id/fragment3"
+            android:name="ict376.murdoch.edu.au.braid.AddBookActivityFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            tools:layout="@layout/fragment_add_book" />
+
+    </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

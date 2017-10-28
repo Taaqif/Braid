@@ -13,8 +13,11 @@
         android:id="@+id/cover"
         android:layout_width="74dp"
         android:layout_height="102dp"
+        android:layout_marginLeft="10sp"
         android:adjustViewBounds="false"
         android:cropToPadding="false"
+        android:paddingBottom="5sp"
+        android:paddingTop="5sp"
         android:scaleType="fitCenter"
         app:srcCompat="@mipmap/ic_launcher" />
 
@@ -42,29 +45,29 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
             android:textSize="12sp" />
 
+        <TextView
+            android:id="@+id/pageRange"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Page x of x" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/pageRange"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Page x of x" />
-
-            <TextView
                 android:id="@+id/added"
-                android:layout_width="wrap_content"
+                android:layout_width="96dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20sp"
+                android:layout_weight="1"
                 android:text="Added: " />
 
             <TextView
                 android:id="@+id/dateAdded"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20sp"
+                android:layout_marginLeft="5sp"
                 android:layout_weight="1" />
         </LinearLayout>
 

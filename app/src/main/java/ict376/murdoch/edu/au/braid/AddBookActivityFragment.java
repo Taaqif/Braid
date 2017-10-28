@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RatingBar;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,7 +43,7 @@ public class AddBookActivityFragment extends Fragment {
     EditText mPublisher;
     EditText mDatePub;
     EditText mDate;
-    EditText mRating;
+    RatingBar mRating;
     EditText mTotalPages;
     EditText mCurrentPage;
     ImageView mCoverThumbnail;
@@ -95,7 +96,7 @@ public class AddBookActivityFragment extends Fragment {
         mAuthor = (EditText) getActivity().findViewById(R.id.et_author);
         mPublisher = (EditText) getActivity().findViewById(R.id.et_publisher);
         mDatePub = (EditText) getActivity().findViewById(R.id.et_pubdate);
-        mRating = (EditText) getActivity().findViewById(R.id.et_rating);
+        mRating = (RatingBar) getActivity().findViewById(R.id.et_rating);
         mTotalPages = (EditText) getActivity().findViewById(R.id.et_totalpages);
         mCurrentPage = (EditText) getActivity().findViewById(R.id.et_currentpage);
         mCoverThumbnail = (ImageView) getActivity().findViewById(R.id.iv_coverThumbnail);
@@ -112,7 +113,7 @@ public class AddBookActivityFragment extends Fragment {
                 String genre = mGenre.getText().toString();
                 String publisher = mPublisher.getText().toString();
                 String datepub = mDatePub.getText().toString();
-                int rating = Integer.parseInt(mRating.getText().toString());
+                int rating = (int) mRating.getRating();
                 int totalpages = Integer.parseInt(mTotalPages.getText().toString());
                 int currentpage = Integer.parseInt(mCurrentPage.getText().toString());
 

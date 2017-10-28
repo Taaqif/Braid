@@ -1,7 +1,6 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:background="#efd9b8"
     android:layout_height="match_parent">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -9,7 +8,6 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#efd9b8"
         android:orientation="vertical"
         tools:context="ict376.murdoch.edu.au.braid.AddBookActivityFragment"
         tools:layout_editor_absoluteX="0dp"
@@ -24,7 +22,6 @@
             android:layout_marginBottom="13dp"
             android:layout_marginTop="13dp"
             android:layout_marginLeft="130dp"
-            android:background="#324379"
             android:text="  Add a book"
             android:textColor="#ffffff"
             android:textSize="24sp"
@@ -269,19 +266,13 @@
                     tools:text="0" />
 
 
-
-
-
                 <Button
                     android:id="@+id/button_addBook"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginTop="8dp"
-                    android:background="#4a70cb"
+                    android:backgroundTint="#4a70cb"
                     android:text="Add Book"
-                    android:textColor="#ffffff"/>
+                    android:textColor="#ffffff" />
 
 
 
