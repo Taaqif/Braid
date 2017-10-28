@@ -70,7 +70,7 @@ public class BookDisplayFragment extends Fragment {
                     recyclerView.setAdapter(new BookViewAdapter(mydb.getReadBooks(), mListener));
                     break;
                 case 3:
-                    recyclerView.setAdapter(new BookViewAdapter(mydb.getAllBooks(), mListener));
+                    recyclerView.setAdapter(new BookViewAdapter(mydb.getUnreadBooks(), mListener));
                     break;
                 default:
                     recyclerView.setAdapter(new BookViewAdapter(mydb.getAllBooks(), mListener));
