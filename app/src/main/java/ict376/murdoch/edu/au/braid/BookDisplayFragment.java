@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 
 /**
@@ -24,7 +25,7 @@ public class BookDisplayFragment extends Fragment {
     // TODO: Customize parameters
     private int mBookStatus = 1;
     private OnListFragmentInteractionListener mListener;
-
+    private RecyclerView recyclerView;
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -32,8 +33,6 @@ public class BookDisplayFragment extends Fragment {
     public BookDisplayFragment() {
     }
 
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
     public static BookDisplayFragment newInstance(int status) {
         BookDisplayFragment fragment = new BookDisplayFragment();
         Bundle args = new Bundle();
@@ -55,13 +54,17 @@ public class BookDisplayFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_book_display_list, container, false);
+        recyclerView = (RecyclerView) view;
+        refresh();
+        return view;
+    }
+    private void refresh(){
         DatabaseHelper mydb = new DatabaseHelper(getActivity());
 
         //get the variable here.
         // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+
+
             switch (mBookStatus){
                 case 1:
                     recyclerView.setAdapter(new BookViewAdapter(mydb.getAllBooks(), mListener));
@@ -76,7 +79,7 @@ public class BookDisplayFragment extends Fragment {
                     recyclerView.setAdapter(new BookViewAdapter(mydb.getAllBooks(), mListener));
 
 
-            }
+
 //            if (mBookStatus <= 1) {
 //                recyclerView.setLayoutManager(new LinearLayoutManager(context));
 //            } else {
@@ -84,9 +87,7 @@ public class BookDisplayFragment extends Fragment {
 //            }
 //            recyclerView.setAdapter(new BookViewAdapter(mydb.getAllBooks(), mListener));
         }
-        return view;
     }
-
 
     @Override
     public void onAttach(Context context) {
@@ -98,7 +99,12 @@ public class BookDisplayFragment extends Fragment {
                     + " must implement OnListFragmentInteractionListener");
         }
     }
-
+    @Override
+    public void onResume(){
+        super.onResume();
+        //refresh content here
+        refresh();
+    }
     @Override
     public void onDetach() {
         super.onDetach();
