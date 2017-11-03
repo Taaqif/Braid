@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context="ict376.murdoch.edu.au.braid.AddBookActivityFragment"
+        tools:context="ict376.murdoch.edu.au.braid.AddManuallyActivityFragment"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="81dp">
 
@@ -33,7 +33,7 @@
             android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="150dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
 
                 android:orientation="vertical">
@@ -139,31 +139,32 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10sp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingRight="15sp">
 
 
                 <EditText
                     android:id="@+id/et_title"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="36dp"
 
                     android:ems="10"
                     android:hint="Title"
                     android:inputType="text"
-                    android:textAppearance="@android:style/TextAppearance.Material.Small"/>
+                    android:textAppearance="@android:style/TextAppearance.Material.Small" />
 
                 <EditText
                     android:id="@+id/et_isbn"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="36dp"
                     android:ems="10"
                     android:hint="ISBN"
                     android:inputType="text"
-                    android:textAppearance="@android:style/TextAppearance.Material.Small"/>
+                    android:textAppearance="@android:style/TextAppearance.Material.Small" />
 
                 <EditText
                     android:id="@+id/et_author"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="36dp"
                     android:ems="10"
                     android:hint="Author"
@@ -187,7 +188,7 @@
                         app:layout_constraintRight_toRightOf="@+id/et_genre"
                         app:layout_constraintTop_toTopOf="@+id/tv_isbn"
                         app:layout_constraintVertical_bias="0.6"
-                        app:srcCompat="@android:color/black"/>
+                        app:srcCompat="@android:color/black" />
 
                     <Button
                         android:id="@+id/button_takeCoverPhoto"
@@ -198,9 +199,7 @@
                         android:background="#4a70cb"
                         android:text="Take Photo"
                         android:textColor="#ffffff"
-                        android:textSize="10sp"/>
-
-
+                        android:textSize="10sp" />
 
 
                 </LinearLayout>
@@ -208,16 +207,16 @@
 
                 <EditText
                     android:id="@+id/et_genre"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="36dp"
                     android:ems="10"
                     android:hint="Genre"
                     android:inputType="text"
-                    android:textAppearance="@android:style/TextAppearance.Material.Small"/>
+                    android:textAppearance="@android:style/TextAppearance.Material.Small" />
 
                 <EditText
                     android:id="@+id/et_publisher"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="36dp"
                     android:ems="10"
                     android:hint="Publisher"
@@ -226,7 +225,7 @@
 
                 <EditText
                     android:id="@+id/et_pubdate"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="36dp"
                     android:layout_marginTop="1dp"
                     android:ems="10"
@@ -236,7 +235,7 @@
 
                 <EditText
                     android:id="@+id/et_rating"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="36dp"
                     android:ems="10"
                     android:hint="Rating"
@@ -246,7 +245,7 @@
 
                 <EditText
                     android:id="@+id/et_totalpages"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="36dp"
                     android:ems="10"
                     android:hint="Total Pages"
@@ -257,7 +256,7 @@
 
                 <EditText
                     android:id="@+id/et_currentpage"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="36dp"
                     android:ems="10"
                     android:hint="Current Page"
@@ -273,10 +272,6 @@
                     android:backgroundTint="#4a70cb"
                     android:text="Add Book"
                     android:textColor="#ffffff" />
-
-
-
-
 
 
             </LinearLayout>

@@ -16,18 +16,21 @@
             android:layout_height="match_parent"
             android:theme="@style/AppTheme.AppBarOverlay">
 
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/addBookToolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                app:srcCompat="@drawable/braid" />
+                android:background="?attr/colorPrimary"
+                android:minHeight="?attr/actionBarSize"
+                android:theme="?attr/actionBarTheme"
+                app:title="Add Book Manually" />
 
         </android.support.design.widget.AppBarLayout>
 
         <fragment
-            android:id="@+id/fragment3"
-            android:name="ict376.murdoch.edu.au.braid.AddBookActivityFragment"
+            android:id="@+id/add_book_fragment"
+            android:name="ict376.murdoch.edu.au.braid.AddManuallyActivityFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"

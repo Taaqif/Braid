@@ -1,10 +1,14 @@
 package ict376.murdoch.edu.au.braid;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.Toolbar;
 
 import android.support.v4.app.Fragment;
@@ -12,12 +16,15 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.EditText;
 import android.widget.TextView;
 
 public class BookTabbedDisplayActivity extends AppCompatActivity implements BookDisplayFragment.OnListFragmentInteractionListener {
@@ -56,13 +63,43 @@ public class BookTabbedDisplayActivity extends AppCompatActivity implements Book
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(BookTabbedDisplayActivity.this.getApplicationContext(), AddBookActivity.class);
 
                 startActivity(intent);
+            }
+        });
+        findViewById(R.id.fabISBN).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder;
+
+                    builder = new AlertDialog.Builder(view.getContext());
+                // Set up the input
+                View dialogview = LayoutInflater.from(view.getContext()).inflate(R.layout.add_isbn_layout, null);
+                final AppCompatEditText input = (AppCompatEditText) dialogview.findViewById(R.id.editText);
+
+                builder.setTitle("Add Book By ISBN")
+                .setMessage("Enter the ISBN of the book")
+                .setView(dialogview)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // continue
+                        Intent intent = new Intent(BookTabbedDisplayActivity.this.getApplicationContext(), AddBookActivity.class);
+                        intent.putExtra("ISBN", input.getText());
+                        startActivity(intent);
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .show();
+
+
             }
         });
 

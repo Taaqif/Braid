@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ict376.murdoch.edu.au.braid">
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -9,6 +10,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/no_title">
+
         <activity android:name=".BookTabbedDisplayActivity" android:theme="@style/no_title">>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

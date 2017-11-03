@@ -2,6 +2,7 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -36,13 +37,72 @@
 
     </android.support.v4.view.ViewPager>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:tint="#ffffff"
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/multiple_actions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        app:layout_anchor="@+id/container"
+        app:layout_anchorGravity="right|bottom"
+        fab:fab_addButtonColorNormal="@color/colorAccent"
+        fab:fab_addButtonColorPressed="@color/colorAccent"
+        fab:fab_addButtonPlusIconColor="@color/colorPrimaryDark"
+        tools:layout_editor_absoluteX="105dp">
+
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabcamera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:fab_icon="@android:drawable/ic_menu_camera"
+            app:fab_size="normal"
+            fab:fab_colorNormal="@android:color/holo_orange_dark"
+            fab:fab_colorPressed="@android:color/background_dark" />
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add by camera" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabISBN"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="AddByISBNDialog"
+            app:fab_icon="@android:drawable/ic_menu_sort_alphabetically"
+            app:fab_size="normal"
+            fab:fab_colorNormal="@color/colorAccent"
+            fab:fab_colorPressed="@android:color/darker_gray" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add by ISBN" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:fab_icon="@android:drawable/ic_menu_edit"
+            app:fab_size="normal"
+            app:fab_title="Add Manually"
+            fab:fab_colorNormal="@android:color/darker_gray"
+            fab:fab_colorPressed="@android:color/background_dark" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Add Manually" />
+
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
 </android.support.design.widget.CoordinatorLayout>

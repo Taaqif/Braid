@@ -63,7 +63,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
 
-    private static int ver = 1;
+    private static int ver = 2;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, ver);
