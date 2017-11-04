@@ -140,8 +140,21 @@ public class AddManuallyActivityFragment extends Fragment  {
                 String publisher = mPublisher.getText().toString();
                 String datepub = mDatePub.getText().toString();
                 int rating = (int) mRating.getRating();
-                int totalpages = Integer.parseInt(mTotalPages.getText().toString());
-                int currentpage = Integer.parseInt(mCurrentPage.getText().toString());
+                
+                //If pages are null set to 0
+                int totalpages, currentpage;
+                if (mTotalPages.getText().toString().isEmpty()){
+                    totalpages = 0;
+                }
+                else{
+                    totalpages = Integer.parseInt(mTotalPages.getText().toString());
+                }
+                if (mCurrentPage.getText().toString().isEmpty()){
+                    currentpage = 0;
+                }
+                else{
+                    currentpage = Integer.parseInt(mCurrentPage.getText().toString());
+                }
 
                 //TODO Check if this is right not sure how the insert for author works
                 String authorArray[] = author.split(",");
