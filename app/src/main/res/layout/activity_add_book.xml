@@ -28,7 +28,7 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <fragment
+        <FrameLayout
             android:id="@+id/add_book_fragment"
             android:name="ict376.murdoch.edu.au.braid.AddManuallyActivityFragment"
             android:layout_width="match_parent"

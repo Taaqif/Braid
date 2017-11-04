@@ -3,12 +3,19 @@ package ict376.murdoch.edu.au.braid;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -28,42 +35,41 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //-----------------
     private static final String BOOK_TABLE_NAME              = "books";
     //-----------------
-    private static final String BOOK_COLUMN_ID               = "id";
-    private static final String BOOK_COLUMN_TITLE            = "name";
-    private static final String BOOK_COLUMN_ISBN             = "ISBN";
-    private static final String BOOK_COLUMN_COVER            = "cover";
-    private static final String BOOK_COLUMN_CATEGORIES       = "categories";
-    private static final String BOOK_COLUMN_PUBLISHERID      = "publisher_id";
-    private static final String BOOK_COLUMN_STATUS           = "status";
-    private static final String BOOK_COLUMN_PUBLISHED        = "publishedDate";
-    private static final String BOOK_COLUMN_ADDDATE          = "addedDate";
-    private static final String BOOK_COLUMN_RATING           = "rating";
-    private static final String BOOK_COLUMN_TOTALPAGES       = "totalPages";
-    private static final String BOOK_COLUMN_CURRENTPAGE      = "currentPages";
+    private static final String BOOK_COLUMN_ID               = "book_id";
+    private static final String BOOK_COLUMN_TITLE            = "book_name";
+    private static final String BOOK_COLUMN_ISBN             = "book_ISBN";
+    private static final String BOOK_COLUMN_COVER            = "book_cover";
+    private static final String BOOK_COLUMN_PUBLISHERID      = "book_publisher_id";
+    private static final String BOOK_COLUMN_STATUS           = "book_status";
+    private static final String BOOK_COLUMN_PUBLISHED        = "book_publishedDate";
+    private static final String BOOK_COLUMN_ADDDATE          = "book_addedDate";
+    private static final String BOOK_COLUMN_RATING           = "book_rating";
+    private static final String BOOK_COLUMN_TOTALPAGES       = "book_totalPages";
+    private static final String BOOK_COLUMN_CURRENTPAGE      = "book_currentPages";
 
 
     //-----------------
     private static final String AUTHOR_TABLE_NAME            = "authors";
     //-----------------
-    private static final String AUTHOR_COLUMN_ID             = "id";
-    private static final String AUTHOR_COLUMN_NAME           = "name";
+    private static final String AUTHOR_COLUMN_ID             = "author_id";
+    private static final String AUTHOR_COLUMN_NAME           = "author_name";
 
     //-----------------
     private static final String PUBLISHER_TABLE_NAME         = "publisher";
     //-----------------
-    private static final String PUBLISHER_COLUMN_ID          = "id";
-    private static final String PUBLISHER_COLUMN_NAME        = "name";
+    private static final String PUBLISHER_COLUMN_ID          = "publisher_id";
+    private static final String PUBLISHER_COLUMN_NAME        = "publisher_name";
 
 
     //-----------------
-    private static final String BOOK_AUTHOR_TABLE_NAME       = "author_book";
+    private static final String BOOK_AUTHOR_TABLE_NAME       = "book_author";
     //-----------------
-    private static final String BOOK_AUTHOR_COLUMN_AUTHORID  = "author_id";
-    private static final String BOOK_AUTHOR_COLUMN_BOOKID    = "book_id";
+    private static final String BOOK_AUTHOR_COLUMN_AUTHORID  = "book_author_author_id";
+    private static final String BOOK_AUTHOR_COLUMN_BOOKID    = "book_author_book_id";
 
 
 
-    private static int ver = 2;
+    private static int ver = 4;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, ver);
@@ -81,10 +87,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         sqLiteDatabase.execSQL("create table "+ BOOK_TABLE_NAME +" (" +
                 BOOK_COLUMN_ID +" integer primary key, " +
-                BOOK_COLUMN_TITLE + " text UNIQUE, " +
+                BOOK_COLUMN_TITLE + " text, " +
                 BOOK_COLUMN_ISBN + " text, " +
                 BOOK_COLUMN_COVER + " text, " +
-                BOOK_COLUMN_CATEGORIES + " text, " +
                 BOOK_COLUMN_PUBLISHED + " text, " +
                 BOOK_COLUMN_PUBLISHERID + " integer, " +
                 BOOK_COLUMN_STATUS + " integer, " +
@@ -116,7 +121,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
 //    BOOK_COLUMN_TITLE,BOOK_COLUMN_ISBNBOOK_COLUMN_COVER,BOOK_COLUMN_CATEGORIESBOOK_COLUMN_PUBLISHERID,BOOK_COLUMN_PUBLISHED,BOOK_COLUMN_ADDDATE,BOOK_COLUMN_RATINGBOOK_COLUMN_TOTALPAGESBOOK_COLUMN_CURRENTPAGE
-    public boolean insertBook(String title, String ISBN, String cover, String categories, String[] author, String publisher, String publishedDate, int rating, int totalPages, int currentPage ){
+    public boolean insertBook(String title, String ISBN, String cover, String[] author, String publisher, String publishedDate, int rating, int totalPages, int currentPage ){
         SQLiteDatabase db = this.getWritableDatabase();
 
         // Prepare the row to insert
@@ -125,7 +130,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(BOOK_COLUMN_TITLE, title);
         contentValues.put(BOOK_COLUMN_ISBN, ISBN);
         contentValues.put(BOOK_COLUMN_COVER, cover);
-        contentValues.put(BOOK_COLUMN_CATEGORIES, categories);
 
         contentValues.put(BOOK_COLUMN_PUBLISHERID, getPublisherID(publisher));
         contentValues.put(BOOK_COLUMN_PUBLISHED, publishedDate);
@@ -142,6 +146,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         int id = (int) db.insert(BOOK_TABLE_NAME, null, contentValues);
         if(id > 0){
             for (String s : author) {
+
                 contentValues = new ContentValues();
                 contentValues.put(BOOK_AUTHOR_COLUMN_BOOKID, id);
                 contentValues.put(BOOK_AUTHOR_COLUMN_AUTHORID, getAuthorID(s));
@@ -151,10 +156,48 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
             return true;
         }
-        Log.d("st", "he");
         return false;
     }
+    public boolean updateBook(int id, String title, String ISBN, String cover, String[] author, String publisher, String publishedDate, int rating, int totalPages, int currentPage ){
+        SQLiteDatabase db = this.getWritableDatabase();
 
+        // Prepare the row to insert
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(BOOK_COLUMN_TITLE, title);
+        contentValues.put(BOOK_COLUMN_ISBN, ISBN);
+        contentValues.put(BOOK_COLUMN_COVER, cover);
+
+        contentValues.put(BOOK_COLUMN_PUBLISHERID, getPublisherID(publisher));
+        contentValues.put(BOOK_COLUMN_PUBLISHED, publishedDate);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
+        String date = sdf.format(new Date());
+        contentValues.put(BOOK_COLUMN_ADDDATE, date);
+
+        contentValues.put(BOOK_COLUMN_RATING, rating);
+        contentValues.put(BOOK_COLUMN_TOTALPAGES, totalPages);
+        contentValues.put(BOOK_COLUMN_CURRENTPAGE, currentPage);
+
+        // Insert the row
+        int bookid = (int) db.update(BOOK_TABLE_NAME, contentValues, BOOK_COLUMN_ID + " = ?", new String[]{ id + ""});
+        //delete all previous authors from the book
+        db.delete(BOOK_AUTHOR_TABLE_NAME, BOOK_AUTHOR_COLUMN_BOOKID + " = ?", new String[]{ bookid + ""});
+        //reinsert them all
+        if(bookid > 0){
+            for (String s : author) {
+
+                contentValues = new ContentValues();
+                contentValues.put(BOOK_AUTHOR_COLUMN_BOOKID, id);
+                contentValues.put(BOOK_AUTHOR_COLUMN_AUTHORID, getAuthorID(s));
+                db.insert(BOOK_AUTHOR_TABLE_NAME, null, contentValues);
+            }
+
+
+            return true;
+        }
+        return false;
+    }
     private int getPublisherID(String name) {
         SQLiteDatabase db = this.getWritableDatabase();
         int id;
@@ -200,33 +243,63 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void deleteBook(int id){
         SQLiteDatabase db = this.getWritableDatabase();
 
-
+        //delete book
         db.delete(BOOK_TABLE_NAME,
-                BOOK_COLUMN_ID + " = "+ Integer.toString(id) +"" ,  null);
+                BOOK_COLUMN_ID + " = ?" ,  new String[]{ id + ""});
 
 
-        // delete contact
+        // delete book from junction table
         db.delete(BOOK_AUTHOR_TABLE_NAME,
-                BOOK_AUTHOR_COLUMN_BOOKID + " = "+ Integer.toString(id) +" ", null);
+                BOOK_AUTHOR_COLUMN_BOOKID + " = ?" ,  new String[]{ id + ""});
     }
 
     public Book getBook(int id){
         SQLiteDatabase db = this.getReadableDatabase();
         //do some joins here to add author, publisher etc
-        Cursor res =  db.rawQuery( "select * from " + BOOK_TABLE_NAME + " where "+ BOOK_COLUMN_ID +" = '" + id + "'", null );
+        Cursor res =  db.rawQuery( "select * from " + BOOK_TABLE_NAME +
+                " INNER JOIN " + PUBLISHER_TABLE_NAME + " ON "+PUBLISHER_TABLE_NAME+"." + PUBLISHER_COLUMN_ID + " = " + BOOK_TABLE_NAME + "." + BOOK_COLUMN_PUBLISHERID +
+                " where "+ BOOK_TABLE_NAME + "." + BOOK_COLUMN_ID +" = '" + id + "'", null );
         res.moveToFirst();
-        Book tmp = new Book(
-                res.getInt(res.getColumnIndex(BOOK_COLUMN_ID)),
-                res.getString(res.getColumnIndex(BOOK_COLUMN_TITLE)),
-                res.getString(res.getColumnIndex(BOOK_COLUMN_ISBN)),
-                res.getString(res.getColumnIndex(BOOK_COLUMN_COVER)),
-                res.getString(res.getColumnIndex(BOOK_COLUMN_CATEGORIES)),
-                res.getInt(res.getColumnIndex(BOOK_COLUMN_PUBLISHERID)),
-                res.getString(res.getColumnIndex(BOOK_COLUMN_PUBLISHED)),
-                res.getString(res.getColumnIndex(BOOK_COLUMN_ADDDATE)),
-                res.getInt(res.getColumnIndex(BOOK_COLUMN_RATING)),
-                res.getInt(res.getColumnIndex(BOOK_COLUMN_TOTALPAGES)),
-                res.getInt(res.getColumnIndex(BOOK_COLUMN_CURRENTPAGE)));
+
+        //get the authors as a stirng to put into the book object
+        Cursor authorres =  db.rawQuery( "select "+ AUTHOR_COLUMN_NAME +" from " + AUTHOR_TABLE_NAME +
+                " INNER JOIN " + BOOK_AUTHOR_TABLE_NAME + " ON " + BOOK_AUTHOR_TABLE_NAME + "." + BOOK_AUTHOR_COLUMN_AUTHORID+ " = " + AUTHOR_TABLE_NAME + "." + AUTHOR_COLUMN_ID +
+                " where "+ BOOK_AUTHOR_TABLE_NAME + "." + BOOK_AUTHOR_COLUMN_BOOKID +" = '" + res.getInt(res.getColumnIndex(BOOK_COLUMN_ID)) + "'", null );
+        //author list string seperateed by ,
+        String authorString = "";
+        try {
+            while (authorres.moveToNext()) {
+
+                authorString += authorres.getString(authorres.getColumnIndex(AUTHOR_COLUMN_NAME)) + ", ";
+
+            }
+        } finally {
+            //author string will always have a , at the end so clean it up
+            if (null != authorString && !authorString.isEmpty()) {
+                authorString = authorString.substring(0, authorString.length()-2);
+            }
+
+            authorres.close();
+        }
+
+        Book tmp = null;
+
+        if(res.getCount() > 0){
+            tmp = new Book(
+                    res.getInt(res.getColumnIndex(BOOK_COLUMN_ID)),
+                    res.getString(res.getColumnIndex(BOOK_COLUMN_TITLE)),
+                    res.getString(res.getColumnIndex(BOOK_COLUMN_ISBN)),
+                    res.getString(res.getColumnIndex(BOOK_COLUMN_COVER)),
+                    authorString,
+                    res.getString(res.getColumnIndex(PUBLISHER_COLUMN_NAME)),
+                    res.getString(res.getColumnIndex(BOOK_COLUMN_PUBLISHED)),
+                    res.getString(res.getColumnIndex(BOOK_COLUMN_ADDDATE)),
+                    res.getInt(res.getColumnIndex(BOOK_COLUMN_RATING)),
+                    res.getInt(res.getColumnIndex(BOOK_COLUMN_TOTALPAGES)),
+                    res.getInt(res.getColumnIndex(BOOK_COLUMN_CURRENTPAGE)));
+        }
+
+
         res.close();
         return tmp;
     }
@@ -236,26 +309,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
         //do some joins here to add author, publisher etc
-        Cursor res =  db.rawQuery( "select * from " + BOOK_TABLE_NAME, null );
+        Cursor res =  db.rawQuery( "select * from " + BOOK_TABLE_NAME + " ORDER BY date("+ BOOK_COLUMN_ADDDATE +" ) DESC", null );
         res.moveToFirst();
 
         while(!res.isAfterLast()){
-            array_list.add( new Book(
-                    res.getInt(res.getColumnIndex(BOOK_COLUMN_ID)),
-                    res.getString(res.getColumnIndex(BOOK_COLUMN_TITLE)),
-                    res.getString(res.getColumnIndex(BOOK_COLUMN_ISBN)),
-                    res.getString(res.getColumnIndex(BOOK_COLUMN_COVER)),
-                    res.getString(res.getColumnIndex(BOOK_COLUMN_CATEGORIES)),
-                    res.getInt(res.getColumnIndex(BOOK_COLUMN_PUBLISHERID)),
-                    res.getString(res.getColumnIndex(BOOK_COLUMN_PUBLISHED)),
-                    res.getString(res.getColumnIndex(BOOK_COLUMN_ADDDATE)),
-                    res.getInt(res.getColumnIndex(BOOK_COLUMN_RATING)),
-                    res.getInt(res.getColumnIndex(BOOK_COLUMN_TOTALPAGES)),
-                    res.getInt(res.getColumnIndex(BOOK_COLUMN_CURRENTPAGE))
-            ) );
+            Book tmp = getBook(res.getInt(res.getColumnIndex(BOOK_COLUMN_ID)));
+            if(tmp != null){
+                array_list.add(tmp);
+            }
+
             res.moveToNext();
         }
         res.close();
+        Collections.sort(array_list, new Comparator<Book>() {
+
+            DateFormat f = new SimpleDateFormat("dd-MM-yyyy");
+            public int compare(Book o1, Book o2) {
+                try {
+                    return f.parse(o2.getAddedDate()).compareTo(f.parse(o1.getAddedDate()));
+                } catch (ParseException e) {
+                    throw new IllegalArgumentException(e);
+                }
+            }
+        });
         return array_list;
     }
     public List<Book> getReadBooks(){
@@ -267,22 +343,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         res.moveToFirst();
 
         while(!res.isAfterLast()){
-            array_list.add( new Book(
-                    res.getInt(res.getColumnIndex(BOOK_COLUMN_ID)),
-                    res.getString(res.getColumnIndex(BOOK_COLUMN_TITLE)),
-                    res.getString(res.getColumnIndex(BOOK_COLUMN_ISBN)),
-                    res.getString(res.getColumnIndex(BOOK_COLUMN_COVER)),
-                    res.getString(res.getColumnIndex(BOOK_COLUMN_CATEGORIES)),
-                    res.getInt(res.getColumnIndex(BOOK_COLUMN_PUBLISHERID)),
-                    res.getString(res.getColumnIndex(BOOK_COLUMN_PUBLISHED)),
-                    res.getString(res.getColumnIndex(BOOK_COLUMN_ADDDATE)),
-                    res.getInt(res.getColumnIndex(BOOK_COLUMN_RATING)),
-                    res.getInt(res.getColumnIndex(BOOK_COLUMN_TOTALPAGES)),
-                    res.getInt(res.getColumnIndex(BOOK_COLUMN_CURRENTPAGE))
-            ) );
+            Book tmp = getBook(res.getInt(res.getColumnIndex(BOOK_COLUMN_ID)));
+            if(tmp != null){
+                array_list.add(tmp);
+            }
+
             res.moveToNext();
         }
         res.close();
+        Collections.sort(array_list, new Comparator<Book>() {
+
+            DateFormat f = new SimpleDateFormat("dd-MM-yyyy");
+            public int compare(Book o1, Book o2) {
+                try {
+                    return f.parse(o2.getAddedDate()).compareTo(f.parse(o1.getAddedDate()));
+                } catch (ParseException e) {
+                    throw new IllegalArgumentException(e);
+                }
+            }
+        });
         return array_list;
     }
     public List<Book> getUnreadBooks(){
@@ -294,22 +373,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         res.moveToFirst();
 
         while(!res.isAfterLast()){
-            array_list.add( new Book(
-                    res.getInt(res.getColumnIndex(BOOK_COLUMN_ID)),
-                    res.getString(res.getColumnIndex(BOOK_COLUMN_TITLE)),
-                    res.getString(res.getColumnIndex(BOOK_COLUMN_ISBN)),
-                    res.getString(res.getColumnIndex(BOOK_COLUMN_COVER)),
-                    res.getString(res.getColumnIndex(BOOK_COLUMN_CATEGORIES)),
-                    res.getInt(res.getColumnIndex(BOOK_COLUMN_PUBLISHERID)),
-                    res.getString(res.getColumnIndex(BOOK_COLUMN_PUBLISHED)),
-                    res.getString(res.getColumnIndex(BOOK_COLUMN_ADDDATE)),
-                    res.getInt(res.getColumnIndex(BOOK_COLUMN_RATING)),
-                    res.getInt(res.getColumnIndex(BOOK_COLUMN_TOTALPAGES)),
-                    res.getInt(res.getColumnIndex(BOOK_COLUMN_CURRENTPAGE))
-            ) );
+            Book tmp = getBook(res.getInt(res.getColumnIndex(BOOK_COLUMN_ID)));
+            if(tmp != null){
+                array_list.add(tmp);
+            }
+
             res.moveToNext();
         }
         res.close();
+        Collections.sort(array_list, new Comparator<Book>() {
+
+            DateFormat f = new SimpleDateFormat("dd-MM-yyyy");
+            public int compare(Book o1, Book o2) {
+                try {
+                    return f.parse(o2.getAddedDate()).compareTo(f.parse(o1.getAddedDate()));
+                } catch (ParseException e) {
+                    throw new IllegalArgumentException(e);
+                }
+            }
+        });
         return array_list;
     }
 }

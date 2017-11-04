@@ -5,15 +5,17 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v7.widget.AppCompatEditText
+    <EditText
         android:id="@+id/editText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="26dp"
         android:layout_marginRight="26dp"
+        android:backgroundTint="@color/colorPrimary"
         android:gravity="center"
+        android:hint="ISBN"
+        android:inputType="text"
         android:singleLine="true"
-        android:textAlignment="viewStart"
-        app:backgroundTint="@color/colorPrimary" />
+        android:textAlignment="viewStart" />
 
 </LinearLayout>

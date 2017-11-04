@@ -1,11 +1,15 @@
 package ict376.murdoch.edu.au.braid;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatEditText;
@@ -26,6 +30,9 @@ import android.view.ViewGroup;
 
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 public class BookTabbedDisplayActivity extends AppCompatActivity implements BookDisplayFragment.OnListFragmentInteractionListener {
 
@@ -79,7 +86,7 @@ public class BookTabbedDisplayActivity extends AppCompatActivity implements Book
                     builder = new AlertDialog.Builder(view.getContext());
                 // Set up the input
                 View dialogview = LayoutInflater.from(view.getContext()).inflate(R.layout.add_isbn_layout, null);
-                final AppCompatEditText input = (AppCompatEditText) dialogview.findViewById(R.id.editText);
+                final EditText input = (EditText) dialogview.findViewById(R.id.editText);
 
                 builder.setTitle("Add Book By ISBN")
                 .setMessage("Enter the ISBN of the book")
@@ -88,7 +95,7 @@ public class BookTabbedDisplayActivity extends AppCompatActivity implements Book
                     public void onClick(DialogInterface dialog, int which) {
                         // continue
                         Intent intent = new Intent(BookTabbedDisplayActivity.this.getApplicationContext(), AddBookActivity.class);
-                        intent.putExtra("ISBN", input.getText());
+                        intent.putExtra("ISBN", input.getText().toString());
                         startActivity(intent);
                     }
                 })
@@ -103,10 +110,41 @@ public class BookTabbedDisplayActivity extends AppCompatActivity implements Book
             }
         });
 
+        findViewById(R.id.fabcamera).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (ContextCompat.checkSelfPermission(BookTabbedDisplayActivity.this, Manifest.permission.CAMERA)
+                        == PackageManager.PERMISSION_DENIED) {
+                    ActivityCompat.requestPermissions(BookTabbedDisplayActivity.this, new String[]{Manifest.permission.CAMERA}, 1);
+
+
+                } else {
+                    IntentIntegrator scanIntegrator = new IntentIntegrator(BookTabbedDisplayActivity.this);
+                    scanIntegrator.initiateScan();
+                }
+
+
+
+
+            }
+        });
+
 
     }
 
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        //retrieve scan result
+        IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+        if (scanningResult != null) {
+            //we have a result
+            String scanContent = scanningResult.getContents();
 
+            // continue
+            Intent newintent = new Intent(BookTabbedDisplayActivity.this.getApplicationContext(), AddBookActivity.class);
+            newintent.putExtra("ISBN", scanContent);
+            startActivity(newintent);
+        }
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -122,7 +160,7 @@ public class BookTabbedDisplayActivity extends AppCompatActivity implements Book
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_save) {
             return true;
         }
 

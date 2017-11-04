@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:background="@android:drawable/dialog_holo_light_frame"
 
-    android:padding="5sp"
+    android:padding="10sp"
     android:weightSum="1">
 
     <ImageView
@@ -23,8 +23,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="10sp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="20sp"
         android:orientation="vertical">
 
         <TextView
@@ -72,5 +72,15 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/textViewOptions"
+        android:layout_width="40sp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="-30sp"
+        android:paddingLeft="10sp"
+        android:paddingTop="10sp"
+        android:text="⋮"
+        android:textAppearance="?android:textAppearanceLarge" />
 
 </LinearLayout>

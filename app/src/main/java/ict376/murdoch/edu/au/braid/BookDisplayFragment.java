@@ -58,33 +58,28 @@ public class BookDisplayFragment extends Fragment {
         refresh();
         return view;
     }
-    private void refresh(){
+    public void refresh(){
         DatabaseHelper mydb = new DatabaseHelper(getActivity());
 
         //get the variable here.
         // Set the adapter
-
-
+        recyclerView.getRecycledViewPool().clear();
+        recyclerView.setAdapter(null);
             switch (mBookStatus){
                 case 1:
-                    recyclerView.setAdapter(new BookViewAdapter(mydb.getAllBooks(), mListener));
+                    recyclerView.setAdapter(new BookViewAdapter(mydb.getAllBooks(), mListener, BookDisplayFragment.this));
                     break;
                 case 2:
-                    recyclerView.setAdapter(new BookViewAdapter(mydb.getReadBooks(), mListener));
+                    recyclerView.setAdapter(new BookViewAdapter(mydb.getReadBooks(), mListener, BookDisplayFragment.this));
                     break;
                 case 3:
-                    recyclerView.setAdapter(new BookViewAdapter(mydb.getUnreadBooks(), mListener));
+                    recyclerView.setAdapter(new BookViewAdapter(mydb.getUnreadBooks(), mListener, BookDisplayFragment.this));
                     break;
                 default:
-                    recyclerView.setAdapter(new BookViewAdapter(mydb.getAllBooks(), mListener));
+                    recyclerView.setAdapter(new BookViewAdapter(mydb.getAllBooks(), mListener, BookDisplayFragment.this));
 
 
 
-//            if (mBookStatus <= 1) {
-//                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-//            } else {
-//                recyclerView.setLayoutManager(new GridLayoutManager(context, mBookStatus));
-//            }
 //            recyclerView.setAdapter(new BookViewAdapter(mydb.getAllBooks(), mListener));
         }
     }
@@ -124,5 +119,6 @@ public class BookDisplayFragment extends Fragment {
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
         void onListFragmentInteraction(Book item);
+
     }
 }

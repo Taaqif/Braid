@@ -20,12 +20,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
+import android.widget.Toast;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
@@ -35,18 +32,20 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
 public class AddManuallyActivityFragment extends Fragment  {
+    private final static String ISBN_KEY = "ISBN";
+    private final static String ID_KEY = "ID";
+
     //View
     boolean mDualPane;
     View mLayoutView;
     private ListView obj;
-
+    int editingID = -1;
     //Database
     DatabaseHelper mydb;
 
@@ -54,7 +53,6 @@ public class AddManuallyActivityFragment extends Fragment  {
     EditText mTitle;
     EditText mIsbn;
     EditText mAuthor;
-    EditText mGenre;
     EditText mPublisher;
     EditText mDatePub;
     EditText mDate;
@@ -67,8 +65,6 @@ public class AddManuallyActivityFragment extends Fragment  {
     Button mAddButton;
     //Button for taking image
     Button mTakePhotoButton;
-    //Button for autofilling details
-    Button mAutoFill;
 
     //Variable for the taking photo
     static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -80,11 +76,14 @@ public class AddManuallyActivityFragment extends Fragment  {
 
     public static AddManuallyActivityFragment getInstance(String ISBN) {
         Bundle bundle = new Bundle();
-        bundle.putString("ISBN", ISBN);
+        bundle.putString(ISBN_KEY, ISBN);
 
         AddManuallyActivityFragment fragment = new AddManuallyActivityFragment();
         fragment.setArguments(bundle);
         return fragment;
+    }
+    public AddManuallyActivityFragment(){
+        setRetainInstance(true);
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -92,14 +91,23 @@ public class AddManuallyActivityFragment extends Fragment  {
 
         mLayoutView = inflater.inflate(R.layout.fragment_add_book, null);
         requestQueue = Volley.newRequestQueue(getActivity());
-        Bundle bundle = this.getArguments();
-        if (bundle != null) {
-            Log.d("BUNDLE", bundle.toString());
-            if(bundle.getString("ISBN").length()>0){
-                autofill(bundle.getString("ISBN"));
-            }
-        }
+
         return mLayoutView;
+    }
+
+    private void populateFieldsByBook(Serializable id) {
+
+        editingID = ((Book) id).getID();
+
+        mTitle.setText(((Book) id).getTitle());
+        mIsbn.setText(((Book) id).getISBN());
+        mAuthor.setText(((Book) id).getAuthors());
+        mPublisher.setText(((Book) id).getPublisher());
+        mDatePub.setText(((Book) id).getPublishedDate());
+        mRating.setNumStars(((Book) id).getRating());
+        mTotalPages.setText(((Book) id).getTotalPages() + "");
+        mCurrentPage.setText(((Book) id).getCurrentPages()+ "");
+//        mCoverThumbnail.setText();
     }
 
     @Override
@@ -113,12 +121,10 @@ public class AddManuallyActivityFragment extends Fragment  {
         // set the onclick listeners for the buttons
         mAddButton = (Button) getActivity().findViewById(R.id.button_addBook);
         mTakePhotoButton = (Button) getActivity().findViewById(R.id.button_takeCoverPhoto);
-        mAutoFill = (Button) getActivity().findViewById(R.id.button_autofill);
 
         //Assign name to each edit text
         mTitle = (EditText) getActivity().findViewById(R.id.et_title);
         mIsbn = (EditText) getActivity().findViewById(R.id.et_isbn);
-        mGenre = (EditText) getActivity().findViewById(R.id.et_genre);
         mAuthor = (EditText) getActivity().findViewById(R.id.et_author);
         mPublisher = (EditText) getActivity().findViewById(R.id.et_publisher);
         mDatePub = (EditText) getActivity().findViewById(R.id.et_pubdate);
@@ -128,31 +134,12 @@ public class AddManuallyActivityFragment extends Fragment  {
         mCoverThumbnail = (ImageView) getActivity().findViewById(R.id.iv_coverThumbnail);
 
         //LISTENER for ADDBOOK button
-        mAddButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Getting all the values from the edit texts
-                String title = mTitle.getText().toString();
-                String isbn = mIsbn.getText().toString();
-                String cover = mCurrentPhotoPath;
-                String author = mAuthor.getText().toString();
-                String genre = mGenre.getText().toString();
-                String publisher = mPublisher.getText().toString();
-                String datepub = mDatePub.getText().toString();
-                int rating = (int) mRating.getRating();
-                int totalpages = Integer.parseInt(mTotalPages.getText().toString());
-                int currentpage = Integer.parseInt(mCurrentPage.getText().toString());
-
-                //TODO Check if this is right not sure how the insert for author works
-                String authorArray[] = author.split(",");
-
-                mydb.insertBook(title, isbn, cover, genre, authorArray, publisher, datepub, rating, totalpages, currentpage);
-                getActivity().finish();
-                //Test print
-                //Log.d("myTag", mydb.getAllBooks().toString());
-                //Log.d("myTag", title+" "+isbn+" "+cover+" "+genre+" "+author+" "+publisher+" "+datepub+" "+" "+rating+" "+totalpages+" "+currentpage);
-            }
-        });
+//        mAddButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                SaveBook();
+//            }
+//        });
 
         //LISTENER for TAKEPHOTO button
         mTakePhotoButton.setOnClickListener(new View.OnClickListener() {
@@ -161,16 +148,48 @@ public class AddManuallyActivityFragment extends Fragment  {
                 takePhoto();
             }
         });
-
-        mAutoFill.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                autofill("9783161484100");
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            if(bundle.getString(ISBN_KEY) != null){
+                populateFieldsByISBN(bundle.getString(ISBN_KEY));
             }
-        });
+            if(bundle.getSerializable(ID_KEY) != null){
+                populateFieldsByBook(bundle.getSerializable(ID_KEY));
+            }
+        }
     }
+    public void SaveBook(){
+        //Getting all the values from the edit texts
+        String title = mTitle.getText().toString();
+        String isbn = mIsbn.getText().toString();
+        String cover = mCurrentPhotoPath;
+        String author = mAuthor.getText().toString();
+        String publisher = mPublisher.getText().toString();
+        String datepub = mDatePub.getText().toString();
+        int rating = (int) mRating.getRating();
+        int totalpages = 0;
+        int currentpage = 0;
+        try{
+            totalpages = Integer.parseInt(mTotalPages.getText().toString());
+            currentpage = Integer.parseInt(mCurrentPage.getText().toString());
 
-    private void autofill(String isbn) {
+        }catch (NumberFormatException e){
+           //dont do anything, will reset to 0
+        }
+
+        //TODO Check if this is right not sure how the insert for author works
+        String authorArray[] = author.split(",");
+        if(editingID > 0){
+            mydb.updateBook(editingID, title, isbn, cover, authorArray, publisher, datepub, rating, totalpages, currentpage);
+            Toast.makeText(getContext(), "Book Updated", Toast.LENGTH_SHORT).show();
+
+        }else{
+            mydb.insertBook(title, isbn, cover, authorArray, publisher, datepub, rating, totalpages, currentpage);
+            Toast.makeText(getContext(), "Book Added", Toast.LENGTH_SHORT).show();
+        }
+        getActivity().finish();
+    }
+    private void populateFieldsByISBN(final String isbn) {
         final BookAPIHelper bh = new BookAPIHelper(getActivity());
         bh.getBookFromISBN(isbn, new VolleyCallback(){
 
@@ -181,20 +200,34 @@ public class AddManuallyActivityFragment extends Fragment  {
                     if(resBookArray.length()>0){
 
                         JSONObject bookInfo = resBookArray.getJSONObject(0).getJSONObject("volumeInfo");
-                        Log.d("Volley", bookInfo.toString());
-                        mTitle.setText(bookInfo.getString("title"));
-                        mIsbn.setText(bookInfo.getString("title"));
-                        mAuthor.setText(bookInfo.getJSONArray("authors").join(", "));
-//                        mGenre.setText();
-//                        mPublisher.setText();
-                        mDatePub.setText(bookInfo.getString("publishedDate"));
+                        Toast.makeText(getActivity(), "ISBN data found", Toast.LENGTH_SHORT).show();
 
-                        new DownloadImageTask(mCoverThumbnail)
-                                .execute(bookInfo.getJSONObject("imageLinks").getString("thumbnail"));
+                        Log.d("Volley", bookInfo.toString());
+                        if(bookInfo.has("title")){
+                            mTitle.setText(bookInfo.getString("title"));
+                        }
+                            mIsbn.setText(isbn);
+                        if(bookInfo.has("authors")){
+                            mAuthor.setText(bookInfo.getJSONArray("authors").join(", ").replace("\"",""));
+                        }
+                        if(bookInfo.has("pageCount")){
+                            mTotalPages.setText(bookInfo.getString("pageCount"));
+                        }
+                        if(bookInfo.has("publisher")){
+                            mPublisher.setText(bookInfo.getString("publisher"));
+                        }
+                        if(bookInfo.has("publishedDate")){
+                            mDatePub.setText(bookInfo.getString("publishedDate"));
+                        }
+                        if(bookInfo.has("imageLinks")) {
+                            new DownloadImageTask(mCoverThumbnail)
+                                    .execute(bookInfo.getJSONObject("imageLinks").getString("thumbnail"));
+                        }
                     }
 
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    Toast.makeText(getActivity(), "ISBN data could not be read", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -232,6 +265,7 @@ public class AddManuallyActivityFragment extends Fragment  {
             }
         }
     }
+
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
 

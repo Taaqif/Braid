@@ -1,13 +1,21 @@
 package ict376.murdoch.edu.au.braid;
 
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import ict376.murdoch.edu.au.braid.BookDisplayFragment.OnListFragmentInteractionListener;
 
@@ -22,10 +30,13 @@ public class BookViewAdapter extends RecyclerView.Adapter<BookViewAdapter.ViewHo
 
     private final List<Book> mValues;
     private final OnListFragmentInteractionListener mListener;
-
-    public BookViewAdapter(List<Book> items, OnListFragmentInteractionListener listener) {
+    private BookDisplayFragment fragment;
+    private BookViewAdapter instance;
+    public BookViewAdapter(List<Book> items, OnListFragmentInteractionListener listener, BookDisplayFragment fragment) {
         mValues = items;
         mListener = listener;
+        this.fragment = fragment;
+        this.instance = this;
     }
 
     @Override
@@ -39,15 +50,15 @@ public class BookViewAdapter extends RecyclerView.Adapter<BookViewAdapter.ViewHo
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         //this is where you se the book details
-        holder.mTitleView.setText(mValues.get(position).getTitle());
-        holder.mAuthorView.setText(mValues.get(position).getTitle());
-        holder.mDateView.setText(mValues.get(position).getAddedDate());
+        holder.mTitleView.setText(holder.mItem.getTitle());
+        holder.mAuthorView.setText(holder.mItem.getAuthors());
+        holder.mDateView.setText(holder.mItem.getAddedDate());
 
-        int totalpages = mValues.get(position).getTotalPages();
-        int currentpage = mValues.get(position).getCurrentPages();
+        int totalpages = holder.mItem.getTotalPages();
+        int currentpage = holder.mItem.getCurrentPages();
         holder.mPageView.setText("Page: " + currentpage + " of " + totalpages);
 
-        Bitmap coverPath = BitmapFactory.decodeFile(mValues.get(position).getCover());
+        Bitmap coverPath = BitmapFactory.decodeFile(holder.mItem.getCover());
         holder.mCoverView.setImageBitmap(coverPath);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -60,6 +71,65 @@ public class BookViewAdapter extends RecyclerView.Adapter<BookViewAdapter.ViewHo
                 }
             }
         });
+        holder.buttonViewOption.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+
+                //creating a popup menu
+                PopupMenu popup = new PopupMenu(view.getContext(), holder.buttonViewOption);
+                //inflating menu from xml resource
+                popup.inflate(R.menu.menu_book_popup_options);
+                //adding click listener
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.edit:
+                                //handle edit
+                                Intent intent = new Intent(view.getContext(), AddBookActivity.class);
+                                intent.putExtra("ID", holder.mItem);
+                                view.getContext().startActivity(intent);
+                                break;
+                            case R.id.delete:
+                                //handle delete click
+                                showDeleteDialog(view.getContext(), holder.mItem.getID());
+                                fragment.refresh();
+                                instance.notifyDataSetChanged();
+                                break;
+                        }
+                        return false;
+                    }
+                });
+                //displaying the popup
+                popup.show();
+
+            }
+        });
+    }
+
+    private void showDeleteDialog(final Context context, final int id) {
+        AlertDialog.Builder builder;
+
+        builder = new AlertDialog.Builder(context);
+        // Set up the input
+
+        builder.setTitle("Remove book?")
+                .setMessage("Are you sure you wish to remove this book?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // continue
+                        DatabaseHelper mydb = new DatabaseHelper(context);
+                        Toast.makeText(context, "Book Removed", Toast.LENGTH_SHORT).show();
+
+                        mydb.deleteBook(id);
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .show();
     }
 
     @Override
@@ -75,6 +145,7 @@ public class BookViewAdapter extends RecyclerView.Adapter<BookViewAdapter.ViewHo
         public final TextView mDateView;
         public final TextView mPageView;
         public Book mItem;
+        public TextView buttonViewOption;
 
         public ViewHolder(View view) {
             super(view);
@@ -84,6 +155,7 @@ public class BookViewAdapter extends RecyclerView.Adapter<BookViewAdapter.ViewHo
             mCoverView = (ImageView) view.findViewById(R.id.cover);
             mDateView = (TextView) view.findViewById(R.id.dateAdded);
             mPageView = (TextView) view.findViewById(R.id.pageRange);
+            buttonViewOption = (TextView) itemView.findViewById(R.id.textViewOptions);
         }
 
         @Override
