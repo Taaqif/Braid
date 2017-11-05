@@ -185,6 +185,7 @@
                     android:id="@+id/et_currentpage"
                     android:layout_width="match_parent"
                     android:layout_height="36dp"
+                    android:editable="false"
                     android:ems="10"
                     android:hint="Current Page"
                     android:inputType="number"
@@ -192,6 +193,7 @@
                     tools:text="0" />
 
                 <SeekBar
+                    android:id="@+id/et_currentpageSeek"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 

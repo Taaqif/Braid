@@ -140,9 +140,12 @@ public class BookTabbedDisplayActivity extends AppCompatActivity implements Book
             String scanContent = scanningResult.getContents();
 
             // continue
-            Intent newintent = new Intent(BookTabbedDisplayActivity.this.getApplicationContext(), AddBookActivity.class);
-            newintent.putExtra("ISBN", scanContent);
-            startActivity(newintent);
+            if(!scanContent.isEmpty()){
+                Intent newintent = new Intent(BookTabbedDisplayActivity.this.getApplicationContext(), AddBookActivity.class);
+                newintent.putExtra("ISBN", scanContent);
+                startActivity(newintent);
+            }
+
         }
     }
     @Override

@@ -1,6 +1,7 @@
 package ict376.murdoch.edu.au.braid;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -21,11 +22,12 @@ import android.widget.Toast;
 public class BookDisplayFragment extends Fragment {
 
     // TODO: Customize parameter argument names
-    private static final String BOOK_STATUS = "column-count";
+    private static final String BOOK_STATUS = "boo-status";
     // TODO: Customize parameters
     private int mBookStatus = 1;
     private OnListFragmentInteractionListener mListener;
     private RecyclerView recyclerView;
+    private int mColumnCount =1;
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -44,7 +46,13 @@ public class BookDisplayFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        int currentOrientation = getResources().getConfiguration().orientation;
+        if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+            mColumnCount = 2;
+        }
+        else {
+           mColumnCount =1;
+        }
         if (getArguments() != null) {
             mBookStatus = getArguments().getInt(BOOK_STATUS);
         }
@@ -64,6 +72,11 @@ public class BookDisplayFragment extends Fragment {
         //get the variable here.
         // Set the adapter
         recyclerView.getRecycledViewPool().clear();
+        if (mColumnCount <= 1) {
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        } else {
+            recyclerView.setLayoutManager(new GridLayoutManager(getContext(), mColumnCount));
+        }
         recyclerView.setAdapter(null);
             switch (mBookStatus){
                 case 1:

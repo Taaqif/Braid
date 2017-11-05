@@ -326,7 +326,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             DateFormat f = new SimpleDateFormat("dd-MM-yyyy");
             public int compare(Book o1, Book o2) {
                 try {
-                    return f.parse(o2.getAddedDate()).compareTo(f.parse(o1.getAddedDate()));
+                    return f.parse(o1.getAddedDate()).compareTo(f.parse(o2.getAddedDate()));
                 } catch (ParseException e) {
                     throw new IllegalArgumentException(e);
                 }
@@ -356,7 +356,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             DateFormat f = new SimpleDateFormat("dd-MM-yyyy");
             public int compare(Book o1, Book o2) {
                 try {
-                    return f.parse(o2.getAddedDate()).compareTo(f.parse(o1.getAddedDate()));
+                    return f.parse(o1.getAddedDate()).compareTo(f.parse(o2.getAddedDate()));
                 } catch (ParseException e) {
                     throw new IllegalArgumentException(e);
                 }
@@ -386,7 +386,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             DateFormat f = new SimpleDateFormat("dd-MM-yyyy");
             public int compare(Book o1, Book o2) {
                 try {
-                    return f.parse(o2.getAddedDate()).compareTo(f.parse(o1.getAddedDate()));
+                    return f.parse(o1.getAddedDate()).compareTo(f.parse(o2.getAddedDate()));
                 } catch (ParseException e) {
                     throw new IllegalArgumentException(e);
                 }

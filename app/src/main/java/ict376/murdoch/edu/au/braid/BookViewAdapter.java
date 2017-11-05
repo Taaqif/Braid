@@ -95,6 +95,7 @@ public class BookViewAdapter extends RecyclerView.Adapter<BookViewAdapter.ViewHo
                                 showDeleteDialog(view.getContext(), holder.mItem.getID());
                                 fragment.refresh();
                                 instance.notifyDataSetChanged();
+                                view.getContext();
                                 break;
                         }
                         return false;

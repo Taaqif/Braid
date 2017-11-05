@@ -11,6 +11,9 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -55,7 +59,7 @@ public class AddManuallyActivityFragment extends Fragment  {
     EditText mAuthor;
     EditText mPublisher;
     EditText mDatePub;
-    EditText mDate;
+    SeekBar mCurrentPageSeek;
     RatingBar mRating;
     EditText mTotalPages;
     EditText mCurrentPage;
@@ -83,7 +87,6 @@ public class AddManuallyActivityFragment extends Fragment  {
         return fragment;
     }
     public AddManuallyActivityFragment(){
-        setRetainInstance(true);
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -91,6 +94,7 @@ public class AddManuallyActivityFragment extends Fragment  {
 
         mLayoutView = inflater.inflate(R.layout.fragment_add_book, null);
         requestQueue = Volley.newRequestQueue(getActivity());
+
 
         return mLayoutView;
     }
@@ -131,7 +135,94 @@ public class AddManuallyActivityFragment extends Fragment  {
         mRating = (RatingBar) getActivity().findViewById(R.id.et_rating);
         mTotalPages = (EditText) getActivity().findViewById(R.id.et_totalpages);
         mCurrentPage = (EditText) getActivity().findViewById(R.id.et_currentpage);
+        mCurrentPage.setEnabled(false);
+        mCurrentPageSeek = (SeekBar) getActivity().findViewById(R.id.et_currentpageSeek);
+        mCurrentPageSeek.setEnabled(false);
         mCoverThumbnail = (ImageView) getActivity().findViewById(R.id.iv_coverThumbnail);
+
+        //total page text listner
+        mTotalPages.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+                if(s.length() != 0){
+                    //check if current page is more than total page
+                    mCurrentPage.setEnabled(true);
+                    mCurrentPageSeek.setEnabled(true);
+                    try{
+                        if(Integer.parseInt(mCurrentPage.getText().toString()) > Integer.parseInt(s.toString())){
+                            mCurrentPage.setText(s.toString());
+                        }
+                    }catch (NumberFormatException e){
+                        //dont do anything, the current page is blank
+                    }
+                    //set max to the total page number
+                    mCurrentPageSeek.setMax(Integer.parseInt(s.toString()));
+                    mCurrentPage.setFilters(new InputFilter[]{ new InputFilterMinMax("0", s.toString())});
+
+                }else{
+                    mCurrentPage.setEnabled(false);
+                    mCurrentPageSeek.setEnabled(false);
+                }
+            }
+        });
+
+        mCurrentPage.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int i, int i1, int i2) {
+                if(s.length() != 0) {
+                    mCurrentPageSeek.setProgress(Integer.parseInt(s.toString()));
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        mCurrentPageSeek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                mCurrentPage.setText(i + "");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+        //data from previous rotation
+        if (savedInstanceState != null){
+            mTitle.setText(savedInstanceState.getString("mTitle_key"));
+            mIsbn.setText(savedInstanceState.getString("mIsbn_key"));
+            mAuthor.setText(savedInstanceState.getString("mAuthor_key"));
+            mPublisher.setText(savedInstanceState.getString("mPublisher_key"));
+            mDatePub.setText(savedInstanceState.getString("mDatePub_key"));
+            mRating.setNumStars(savedInstanceState.getInt("mRating_key"));
+            mTotalPages.setText(savedInstanceState.getString("mTotalPages_key") + "");
+            mCurrentPage.setText(savedInstanceState.getString("mCurrentPage_key")+ "");
+        }
 
         //LISTENER for ADDBOOK button
 //        mAddButton.setOnClickListener(new View.OnClickListener() {
@@ -158,6 +249,7 @@ public class AddManuallyActivityFragment extends Fragment  {
             }
         }
     }
+
     public void SaveBook(){
         //Getting all the values from the edit texts
         String title = mTitle.getText().toString();
@@ -189,6 +281,20 @@ public class AddManuallyActivityFragment extends Fragment  {
         }
         getActivity().finish();
     }
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        //save the fields
+        super.onSaveInstanceState(outState);
+        outState.putString("mTitle", mTitle.getText().toString());
+        outState.putString("mIsbn", mIsbn.getText().toString());
+        outState.putString("mAuthor", mAuthor.getText().toString());
+        outState.putString("mPublisher", mPublisher.getText().toString());
+        outState.putString("mDatePub", mDatePub.getText().toString());
+        outState.putInt("mRating", mRating.getNumStars());
+        outState.putString("mTotalPages", mTotalPages.getText().toString());
+        outState.putString("mCurrentPage", mCurrentPage.getText().toString());
+    }
+
     private void populateFieldsByISBN(final String isbn) {
         final BookAPIHelper bh = new BookAPIHelper(getActivity());
         bh.getBookFromISBN(isbn, new VolleyCallback(){
@@ -304,11 +410,6 @@ public class AddManuallyActivityFragment extends Fragment  {
         // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = image.getAbsolutePath();
         return image;
-    }
-
-
-    private void refresh() {
-
     }
 
 

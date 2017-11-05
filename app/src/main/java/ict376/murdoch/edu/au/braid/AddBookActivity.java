@@ -26,7 +26,7 @@ public class AddBookActivity extends AppCompatActivity {
 
 
         setContentView(R.layout.activity_add_book);
-        // add QueryFragment to the container layout
+        // add AddManuallyActivityFragment to the container layout
         if(savedInstanceState == null) {
             Bundle bundle = new Bundle();
             bundle.putString(ISBN_KEY, getIntent().getStringExtra(ISBN_KEY));
