@@ -1,9 +1,12 @@
 package ict376.murdoch.edu.au.braid;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,6 +14,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
@@ -34,11 +38,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import static android.provider.MediaStore.Images.Media.getBitmap;
 
 
 public class AddManuallyActivityFragment extends Fragment  {
@@ -46,10 +53,9 @@ public class AddManuallyActivityFragment extends Fragment  {
     private final static String ID_KEY = "ID";
 
     //View
-    boolean mDualPane;
     View mLayoutView;
-    private ListView obj;
     int editingID = -1;
+
     //Database
     DatabaseHelper mydb;
 
@@ -65,10 +71,10 @@ public class AddManuallyActivityFragment extends Fragment  {
     EditText mCurrentPage;
     ImageView mCoverThumbnail;
 
-    //Button for adding book
+    //Buttons
     Button mAddButton;
-    //Button for taking image
     Button mTakePhotoButton;
+    Button mDeleteBookButton;
 
     //Variable for the taking photo
     static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -86,19 +92,21 @@ public class AddManuallyActivityFragment extends Fragment  {
         fragment.setArguments(bundle);
         return fragment;
     }
+
     public AddManuallyActivityFragment(){
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        //inflate layout
         mLayoutView = inflater.inflate(R.layout.fragment_add_book, null);
         requestQueue = Volley.newRequestQueue(getActivity());
 
 
         return mLayoutView;
     }
-
+    //populate by book object thorugh serializable
     private void populateFieldsByBook(Serializable id) {
 
         editingID = ((Book) id).getID();
@@ -111,7 +119,42 @@ public class AddManuallyActivityFragment extends Fragment  {
         mRating.setNumStars(((Book) id).getRating());
         mTotalPages.setText(((Book) id).getTotalPages() + "");
         mCurrentPage.setText(((Book) id).getCurrentPages()+ "");
+
+        mDeleteBookButton.setEnabled(true);
+        //if there is a cover
+        if(((Book) id).getCover() != null && !((Book) id).getCover().isEmpty()){
+            mCurrentPhotoPath = ((Book) id).getCover();
+            setCoverImage(mCurrentPhotoPath);
+
+
+        }
 //        mCoverThumbnail.setText();
+    }
+    //sets the cover image to the correct orientarttion based on photo exif
+    //no scaling so would cause OOM issues
+    //needs considering
+    //https://stackoverflow.com/questions/14066038/why-does-an-image-captured-using-camera-intent-gets-rotated-on-some-devices-on-a
+    private void setCoverImage(String path){
+        Bitmap myBitmap = BitmapFactory.decodeFile(path);
+        try {
+            ExifInterface exif = new ExifInterface(path);
+            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+            Matrix matrix = new Matrix();
+            if (orientation == ExifInterface.ORIENTATION_ROTATE_90) {
+                matrix.postRotate(90);
+            }
+            else if (orientation == ExifInterface.ORIENTATION_ROTATE_180) {
+                matrix.postRotate(180);
+            }
+            else if (orientation == ExifInterface.ORIENTATION_ROTATE_270) {
+                matrix.postRotate(270);
+            }
+            myBitmap = Bitmap.createBitmap(myBitmap, 0, 0, myBitmap.getWidth(), myBitmap.getHeight(), matrix, true); // rotating bitmap
+        }
+        catch (Exception e) {
+
+        }
+        mCoverThumbnail.setImageBitmap(myBitmap);
     }
 
     @Override
@@ -119,13 +162,6 @@ public class AddManuallyActivityFragment extends Fragment  {
 
         super.onActivityCreated(savedInstanceState);
         mydb = new DatabaseHelper(getActivity());
-
-        View detailsFrame = getActivity().findViewById(R.id.menu_fragment_container);
-
-        // set the onclick listeners for the buttons
-        mAddButton = (Button) getActivity().findViewById(R.id.button_addBook);
-        mTakePhotoButton = (Button) getActivity().findViewById(R.id.button_takeCoverPhoto);
-
         //Assign name to each edit text
         mTitle = (EditText) getActivity().findViewById(R.id.et_title);
         mIsbn = (EditText) getActivity().findViewById(R.id.et_isbn);
@@ -139,6 +175,10 @@ public class AddManuallyActivityFragment extends Fragment  {
         mCurrentPageSeek = (SeekBar) getActivity().findViewById(R.id.et_currentpageSeek);
         mCurrentPageSeek.setEnabled(false);
         mCoverThumbnail = (ImageView) getActivity().findViewById(R.id.iv_coverThumbnail);
+
+        mTakePhotoButton = (Button) getActivity().findViewById(R.id.button_takeCoverPhoto);
+        mDeleteBookButton = (Button) getActivity().findViewById(R.id.delete_button);
+        mDeleteBookButton.setEnabled(false);
 
         //total page text listner
         mTotalPages.addTextChangedListener(new TextWatcher() {
@@ -154,8 +194,8 @@ public class AddManuallyActivityFragment extends Fragment  {
             @Override
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
-                if(s.length() != 0){
-                    //check if current page is more than total page
+                if(!s.toString().equals("null")  && s.length() != 0){
+                    //check if current page is more than total page then enable the fileds for editing
                     mCurrentPage.setEnabled(true);
                     mCurrentPageSeek.setEnabled(true);
                     try{
@@ -176,6 +216,7 @@ public class AddManuallyActivityFragment extends Fragment  {
             }
         });
 
+        //current page text listner
         mCurrentPage.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -185,7 +226,13 @@ public class AddManuallyActivityFragment extends Fragment  {
             @Override
             public void onTextChanged(CharSequence s, int i, int i1, int i2) {
                 if(s.length() != 0) {
-                    mCurrentPageSeek.setProgress(Integer.parseInt(s.toString()));
+                    try{
+                        //set seekbar progress
+                        mCurrentPageSeek.setProgress(Integer.parseInt(s.toString()));
+
+                    }catch (NumberFormatException e){
+
+                    }
                 }
 
             }
@@ -196,9 +243,11 @@ public class AddManuallyActivityFragment extends Fragment  {
             }
         });
 
+        //seekbar listner
         mCurrentPageSeek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                //set the current page based on seek bar
                 mCurrentPage.setText(i + "");
             }
 
@@ -212,6 +261,7 @@ public class AddManuallyActivityFragment extends Fragment  {
 
             }
         });
+
         //data from previous rotation
         if (savedInstanceState != null){
             mTitle.setText(savedInstanceState.getString("mTitle_key"));
@@ -220,8 +270,14 @@ public class AddManuallyActivityFragment extends Fragment  {
             mPublisher.setText(savedInstanceState.getString("mPublisher_key"));
             mDatePub.setText(savedInstanceState.getString("mDatePub_key"));
             mRating.setNumStars(savedInstanceState.getInt("mRating_key"));
-            mTotalPages.setText(savedInstanceState.getString("mTotalPages_key") + "");
-            mCurrentPage.setText(savedInstanceState.getString("mCurrentPage_key")+ "");
+            mTotalPages.setText(savedInstanceState.getString("mTotalPages_key"));
+            mCurrentPage.setText(savedInstanceState.getString("mCurrentPage_key"));
+            //make sure there is a book path to set
+            if(savedInstanceState.getString("mCurrentPhotoPath") != null){
+                setCoverImage(savedInstanceState.getString("mCurrentPhotoPath"));
+
+            }
+
         }
 
         //LISTENER for ADDBOOK button
@@ -239,6 +295,16 @@ public class AddManuallyActivityFragment extends Fragment  {
                 takePhoto();
             }
         });
+
+
+        //listner for delete book
+        mDeleteBookButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deleteBook();
+            }
+        });
+
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             if(bundle.getString(ISBN_KEY) != null){
@@ -250,15 +316,43 @@ public class AddManuallyActivityFragment extends Fragment  {
         }
     }
 
+    //starts the delete book dialog process
+    private void deleteBook() {
+        AlertDialog.Builder builder;
+
+        builder = new AlertDialog.Builder(getContext());
+        // Set up the input
+
+        builder.setTitle(R.string.title_remove_book)
+                .setMessage(R.string.question_remove_book)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // continue
+                        Toast.makeText(getContext(), R.string.success_book_removed, Toast.LENGTH_SHORT).show();
+
+                        mydb.deleteBook(editingID);
+                        getActivity().finish();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .show();
+    }
+
+    //save the current book
     public void SaveBook(){
         //Getting all the values from the edit texts
-        String title = mTitle.getText().toString();
-        String isbn = mIsbn.getText().toString();
+        String title = mTitle.getText().toString().trim();
+        String isbn = mIsbn.getText().toString().trim();
         String cover = mCurrentPhotoPath;
-        String author = mAuthor.getText().toString();
-        String publisher = mPublisher.getText().toString();
-        String datepub = mDatePub.getText().toString();
+        String author = mAuthor.getText().toString().trim();
+        String publisher = mPublisher.getText().toString().trim();
+        String datepub = mDatePub.getText().toString().trim();
         int rating = (int) mRating.getRating();
+        //assume 0 pages
         int totalpages = 0;
         int currentpage = 0;
         try{
@@ -268,22 +362,31 @@ public class AddManuallyActivityFragment extends Fragment  {
         }catch (NumberFormatException e){
            //dont do anything, will reset to 0
         }
+        //multiple authors are split by semi colon
+        String authorArray[] = author.split(";");
 
-        //TODO Check if this is right not sure how the insert for author works
-        String authorArray[] = author.split(",");
-        if(editingID > 0){
-            mydb.updateBook(editingID, title, isbn, cover, authorArray, publisher, datepub, rating, totalpages, currentpage);
-            Toast.makeText(getContext(), "Book Updated", Toast.LENGTH_SHORT).show();
-
-        }else{
-            mydb.insertBook(title, isbn, cover, authorArray, publisher, datepub, rating, totalpages, currentpage);
-            Toast.makeText(getContext(), "Book Added", Toast.LENGTH_SHORT).show();
+        //get a title
+        if(title.isEmpty() || title.length() <= 0){
+            Toast.makeText(getContext(), R.string.error_title, Toast.LENGTH_SHORT).show();
         }
-        getActivity().finish();
+        else {
+            //if there is an id loaded, update it
+            if (editingID > 0) {
+                mydb.updateBook(editingID, title, isbn, cover, authorArray, publisher, datepub, rating, totalpages, currentpage);
+                Toast.makeText(getContext(), R.string.success_book_updated, Toast.LENGTH_SHORT).show();
+
+            } else {
+                //insert it
+                mydb.insertBook(title, isbn, cover, authorArray, publisher, datepub, rating, totalpages, currentpage);
+                Toast.makeText(getContext(), R.string.success_book_added, Toast.LENGTH_SHORT).show();
+            }
+            getActivity().finish();
+        }
     }
     @Override
     public void onSaveInstanceState(Bundle outState) {
         //save the fields
+        //use the variables as keys
         super.onSaveInstanceState(outState);
         outState.putString("mTitle", mTitle.getText().toString());
         outState.putString("mIsbn", mIsbn.getText().toString());
@@ -293,48 +396,18 @@ public class AddManuallyActivityFragment extends Fragment  {
         outState.putInt("mRating", mRating.getNumStars());
         outState.putString("mTotalPages", mTotalPages.getText().toString());
         outState.putString("mCurrentPage", mCurrentPage.getText().toString());
+        outState.putString("mCurrentPhotoPath", mCurrentPhotoPath);
     }
 
+    //populate fields using aprovided ISBN
     private void populateFieldsByISBN(final String isbn) {
+        //use the book api helper to retun a book to populate
         final BookAPIHelper bh = new BookAPIHelper(getActivity());
-        bh.getBookFromISBN(isbn, new VolleyCallback(){
+        bh.getBookFromISBN(isbn, new BookAPIHelper.VolleyCallback(){
 
             @Override
             public void VolleyResponse(JSONObject books) {
-                try {
-                    JSONArray resBookArray = books.getJSONArray("items");
-                    if(resBookArray.length()>0){
 
-                        JSONObject bookInfo = resBookArray.getJSONObject(0).getJSONObject("volumeInfo");
-                        Toast.makeText(getActivity(), "ISBN data found", Toast.LENGTH_SHORT).show();
-
-                        Log.d("Volley", bookInfo.toString());
-                        if(bookInfo.has("title")){
-                            mTitle.setText(bookInfo.getString("title"));
-                        }
-                            mIsbn.setText(isbn);
-                        if(bookInfo.has("authors")){
-                            mAuthor.setText(bookInfo.getJSONArray("authors").join(", ").replace("\"",""));
-                        }
-                        if(bookInfo.has("pageCount")){
-                            mTotalPages.setText(bookInfo.getString("pageCount"));
-                        }
-                        if(bookInfo.has("publisher")){
-                            mPublisher.setText(bookInfo.getString("publisher"));
-                        }
-                        if(bookInfo.has("publishedDate")){
-                            mDatePub.setText(bookInfo.getString("publishedDate"));
-                        }
-                        if(bookInfo.has("imageLinks")) {
-                            new DownloadImageTask(mCoverThumbnail)
-                                    .execute(bookInfo.getJSONObject("imageLinks").getString("thumbnail"));
-                        }
-                    }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    Toast.makeText(getActivity(), "ISBN data could not be read", Toast.LENGTH_SHORT).show();
-                }
 
             }
         });
@@ -345,11 +418,12 @@ public class AddManuallyActivityFragment extends Fragment  {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-            Bitmap myBitmap = BitmapFactory.decodeFile(mCurrentPhotoPath);
-            mCoverThumbnail.setImageBitmap(myBitmap);
+            setCoverImage(mCurrentPhotoPath);
+
         }
     }
 
+    //take the image
     private void takePhoto() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
@@ -372,6 +446,8 @@ public class AddManuallyActivityFragment extends Fragment  {
         }
     }
 
+    //downlaods an image and sets the corresponding image view to
+    //https://stackoverflow.com/questions/3090650/android-loading-an-image-from-the-web-with-asynctask
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
 
@@ -384,7 +460,13 @@ public class AddManuallyActivityFragment extends Fragment  {
             Bitmap mIcon11 = null;
             try {
                 InputStream in = new java.net.URL(urldisplay).openStream();
+                File photoFile = createImageFile();
                 mIcon11 = BitmapFactory.decodeStream(in);
+                FileOutputStream out = new FileOutputStream(photoFile);
+                mIcon11.compress(Bitmap.CompressFormat.JPEG, 60, out);
+                out.flush();
+                out.close();
+
             } catch (Exception e) {
                 Log.e("Error", e.getMessage());
                 e.printStackTrace();
@@ -396,6 +478,7 @@ public class AddManuallyActivityFragment extends Fragment  {
             bmImage.setImageBitmap(result);
         }
     }
+    //creates a file to be written to
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());

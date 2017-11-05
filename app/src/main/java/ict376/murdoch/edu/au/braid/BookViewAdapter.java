@@ -5,9 +5,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,17 +24,17 @@ import ict376.murdoch.edu.au.braid.BookDisplayFragment.OnListFragmentInteraction
 
 import java.util.List;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link Book} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
- */
+//recycler view adaptor that can display a book object and implemetes listners
 public class BookViewAdapter extends RecyclerView.Adapter<BookViewAdapter.ViewHolder> {
 
+    //the list of books
     private final List<Book> mValues;
     private final OnListFragmentInteractionListener mListener;
+
+    //fragments
     private BookDisplayFragment fragment;
     private BookViewAdapter instance;
+
     public BookViewAdapter(List<Book> items, OnListFragmentInteractionListener listener, BookDisplayFragment fragment) {
         mValues = items;
         mListener = listener;
@@ -43,13 +46,15 @@ public class BookViewAdapter extends RecyclerView.Adapter<BookViewAdapter.ViewHo
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_book_display, parent, false);
+        //inflates the view
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        //this is where you se the book details
+        //this is where you set the book details within the view
+
         holder.mTitleView.setText(holder.mItem.getTitle());
         holder.mAuthorView.setText(holder.mItem.getAuthors());
         holder.mDateView.setText(holder.mItem.getAddedDate());
@@ -58,19 +63,42 @@ public class BookViewAdapter extends RecyclerView.Adapter<BookViewAdapter.ViewHo
         int currentpage = holder.mItem.getCurrentPages();
         holder.mPageView.setText("Page: " + currentpage + " of " + totalpages);
 
-        Bitmap coverPath = BitmapFactory.decodeFile(holder.mItem.getCover());
-        holder.mCoverView.setImageBitmap(coverPath);
+        if(holder.mItem.getCover() != null && !holder.mItem.getCover().isEmpty()){
+            Bitmap myBitmap = BitmapFactory.decodeFile(holder.mItem.getCover());
+            try {
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inSampleSize = 8;
+                ExifInterface exif = new ExifInterface(holder.mItem.getCover());
+                int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+                Matrix matrix = new Matrix();
+                if (orientation == ExifInterface.ORIENTATION_ROTATE_90) {
+                    matrix.postRotate(90);
+                }
+                else if (orientation == ExifInterface.ORIENTATION_ROTATE_180) {
+                    matrix.postRotate(180);
+                }
+                else if (orientation == ExifInterface.ORIENTATION_ROTATE_270) {
+                    matrix.postRotate(270);
+                }
+                myBitmap = Bitmap.createBitmap(myBitmap, 0, 0, myBitmap.getWidth(), myBitmap.getHeight(), matrix, true); // rotating bitmap
+            }
+            catch (Exception e) {
+
+            }
+            holder.mCoverView.setImageBitmap(myBitmap);
+        }
+
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
+                    // return the current selected book object
                     mListener.onListFragmentInteraction(holder.mItem);
                 }
             }
         });
+        //for the options view
         holder.buttonViewOption.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
@@ -90,13 +118,7 @@ public class BookViewAdapter extends RecyclerView.Adapter<BookViewAdapter.ViewHo
                                 intent.putExtra("ID", holder.mItem);
                                 view.getContext().startActivity(intent);
                                 break;
-                            case R.id.delete:
-                                //handle delete click
-                                showDeleteDialog(view.getContext(), holder.mItem.getID());
-                                fragment.refresh();
-                                instance.notifyDataSetChanged();
-                                view.getContext();
-                                break;
+
                         }
                         return false;
                     }
@@ -108,37 +130,15 @@ public class BookViewAdapter extends RecyclerView.Adapter<BookViewAdapter.ViewHo
         });
     }
 
-    private void showDeleteDialog(final Context context, final int id) {
-        AlertDialog.Builder builder;
 
-        builder = new AlertDialog.Builder(context);
-        // Set up the input
-
-        builder.setTitle("Remove book?")
-                .setMessage("Are you sure you wish to remove this book?")
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // continue
-                        DatabaseHelper mydb = new DatabaseHelper(context);
-                        Toast.makeText(context, "Book Removed", Toast.LENGTH_SHORT).show();
-
-                        mydb.deleteBook(id);
-                    }
-                })
-                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // do nothing
-                    }
-                })
-                .show();
-    }
-
+    //get the number of items
     @Override
     public int getItemCount() {
         return mValues.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        //sets uo the variables
         public final View mView;
         public final TextView mTitleView;
         public final TextView mAuthorView;
@@ -161,7 +161,7 @@ public class BookViewAdapter extends RecyclerView.Adapter<BookViewAdapter.ViewHo
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mAuthorView.getText() + "'";
+            return super.toString();
         }
     }
 }

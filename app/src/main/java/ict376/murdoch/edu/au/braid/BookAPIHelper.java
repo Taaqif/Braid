@@ -14,6 +14,8 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONObject;
 
 /**
+ * Book API to help get books from ISBN by use of Volley library.
+ * Adapted from https://developer.android.com/training/volley/index.html
  * Created by Taaqif on 29/10/2017.
  */
 
@@ -25,7 +27,7 @@ public class BookAPIHelper {
 
     private static String baseURL = "https://www.googleapis.com/books/v1/volumes?q=isbn:";
 
-    RequestQueue requestQueue;  // This is our requests queue to process our HTTP requests.
+    RequestQueue requestQueue;  // HTTP requests queue.
 
 
     public void getBookFromISBN(String isbn, final VolleyCallback callback) {
@@ -34,6 +36,8 @@ public class BookAPIHelper {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        //should probably do the JSON processing here and just pass the book to the
+                        //callback
                         callback.VolleyResponse(response);
                     }
 
@@ -42,14 +46,16 @@ public class BookAPIHelper {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // If there a HTTP error then add a note to our repo list.
-//                        setRepoListText("Error while calling REST API");
+                        //error with request
                         Log.e("Volley", error.toString());
                     }
                 }
         );
         // Add the request we just defined to our request queue.
-        // The request queue will automatically handle the request as soon as it can.
         requestQueue.add(arrReq);
+    }
+    //the callback interface
+    public interface VolleyCallback {
+        void VolleyResponse(JSONObject books);
     }
 }

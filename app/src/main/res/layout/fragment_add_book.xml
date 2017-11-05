@@ -13,6 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:paddingBottom="25sp"
             tools:context="ict376.murdoch.edu.au.braid.AddManuallyActivityFragment"
             tools:layout_editor_absoluteX="0dp"
             tools:layout_editor_absoluteY="81dp">
@@ -46,27 +47,26 @@
                         app:layout_constraintRight_toRightOf="@+id/et_genre"
                         app:layout_constraintTop_toTopOf="@+id/tv_isbn"
                         app:layout_constraintVertical_bias="0.6"
-                        app:srcCompat="@android:color/black" />
+                        app:srcCompat="@drawable/nocover" android:contentDescription="@string/todo" />
 
                     <Button
                         android:id="@+id/button_takeCoverPhoto"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:backgroundTint="#4a70cb"
-                        android:text="Take Photo"
+                        android:text="@string/take_photo"
                         android:textColor="#ffffff"
-                        android:textSize="10sp" />
+                        android:textSize="12sp" />
 
 
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/textView10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
                     android:layout_marginStart="16dp"
-                    android:text="Extra Details"
+                    android:text="@string/extra_details"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
                 <TextView
@@ -135,10 +135,9 @@
                     android:paddingTop="20sp">
 
                     <TextView
-                        android:id="@+id/textView9"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Main Details"
+                        android:text="@string/main_details"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
                     <EditText
@@ -146,8 +145,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
 
-                        android:hint="Title"
+                        android:hint="@string/title"
                         android:inputType="text"
+                        android:singleLine="true"
                         android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
                     <EditText
@@ -155,8 +155,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="36dp"
                         android:ems="10"
-                        android:hint="Author"
+                        android:hint="@string/author"
                         android:inputType="text"
+                        android:singleLine="true"
                         android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
                     <EditText
@@ -164,8 +165,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="36dp"
                         android:ems="10"
-                        android:hint="ISBN"
+                        android:hint="@string/isbn"
                         android:inputType="text"
+                        android:singleLine="true"
                         android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
                 </LinearLayout>
@@ -176,8 +178,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="36dp"
                     android:ems="10"
-                    android:hint="Total Pages"
+                    android:hint="@string/total_pages"
                     android:inputType="number"
+                    android:singleLine="true"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     tools:text="0" />
 
@@ -185,10 +188,10 @@
                     android:id="@+id/et_currentpage"
                     android:layout_width="match_parent"
                     android:layout_height="36dp"
-                    android:editable="false"
                     android:ems="10"
-                    android:hint="Current Page"
+                    android:hint="@string/current_page"
                     android:inputType="number"
+                    android:singleLine="true"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     tools:text="0" />
 
@@ -202,8 +205,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="36dp"
                     android:ems="10"
-                    android:hint="Publisher"
+                    android:hint="@string/publisher"
                     android:inputType="text"
+                    android:singleLine="true"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
                 <EditText
@@ -212,8 +216,9 @@
                     android:layout_height="36dp"
                     android:layout_marginTop="1dp"
                     android:ems="10"
-                    android:hint="Date Published"
+                    android:hint="@string/date_published"
                     android:inputType="date"
+                    android:singleLine="true"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
                 <RatingBar
@@ -225,9 +230,16 @@
                     android:numStars="5"
                     android:stepSize="1" />
 
+                <Button
+                    android:id="@+id/delete_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/delete_book" />
+
 
             </LinearLayout>
 
 
         </LinearLayout>
+
     </ScrollView>

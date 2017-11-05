@@ -32,7 +32,7 @@
             android:id="@+id/add_book_fragment"
             android:name="ict376.murdoch.edu.au.braid.AddManuallyActivityFragment"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_weight="1"
             tools:layout="@layout/fragment_add_book" />
 

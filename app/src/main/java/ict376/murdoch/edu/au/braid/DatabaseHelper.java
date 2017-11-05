@@ -69,12 +69,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
 
-    private static int ver = 4;
+    private static int ver = 5;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, ver);
     }
 
+    //creates the batabase tables
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL("create table "+ PUBLISHER_TABLE_NAME +" (" +
@@ -111,6 +112,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
+    //removes and restarts
+    //should implement a migration pattern
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + BOOK_TABLE_NAME);
@@ -120,7 +123,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         onCreate(sqLiteDatabase);
     }
-//    BOOK_COLUMN_TITLE,BOOK_COLUMN_ISBNBOOK_COLUMN_COVER,BOOK_COLUMN_CATEGORIESBOOK_COLUMN_PUBLISHERID,BOOK_COLUMN_PUBLISHED,BOOK_COLUMN_ADDDATE,BOOK_COLUMN_RATINGBOOK_COLUMN_TOTALPAGESBOOK_COLUMN_CURRENTPAGE
+    //inserts a book
     public boolean insertBook(String title, String ISBN, String cover, String[] author, String publisher, String publishedDate, int rating, int totalPages, int currentPage ){
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -144,6 +147,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // Insert the row
         int id = (int) db.insert(BOOK_TABLE_NAME, null, contentValues);
+        //for each author
         if(id > 0){
             for (String s : author) {
 
@@ -158,6 +162,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return false;
     }
+    //update book details
     public boolean updateBook(int id, String title, String ISBN, String cover, String[] author, String publisher, String publishedDate, int rating, int totalPages, int currentPage ){
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -182,7 +187,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // Insert the row
         int bookid = (int) db.update(BOOK_TABLE_NAME, contentValues, BOOK_COLUMN_ID + " = ?", new String[]{ id + ""});
         //delete all previous authors from the book
-        db.delete(BOOK_AUTHOR_TABLE_NAME, BOOK_AUTHOR_COLUMN_BOOKID + " = ?", new String[]{ bookid + ""});
+        db.delete(BOOK_AUTHOR_TABLE_NAME, BOOK_AUTHOR_COLUMN_BOOKID + " = ? ", new String[]{ Integer.toString(bookid)});
+        //db.delete(BOOK_AUTHOR_TABLE_NAME, BOOK_AUTHOR_COLUMN_BOOKID + " = ? ", new String[]{ Integer.toString(bookid)});
         //reinsert them all
         if(bookid > 0){
             for (String s : author) {
@@ -198,6 +204,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return false;
     }
+    //gets or creates a publisher
     private int getPublisherID(String name) {
         SQLiteDatabase db = this.getWritableDatabase();
         int id;
@@ -218,7 +225,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return id;
 
     }
-
+    //gets or creates a author
     private int getAuthorID(String name) {
         SQLiteDatabase db = this.getWritableDatabase();
         int id;
@@ -240,6 +247,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
+    //deletes a book and its references
     public void deleteBook(int id){
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -253,6 +261,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 BOOK_AUTHOR_COLUMN_BOOKID + " = ?" ,  new String[]{ id + ""});
     }
 
+    //gets a book
     public Book getBook(int id){
         SQLiteDatabase db = this.getReadableDatabase();
         //do some joins here to add author, publisher etc
@@ -261,6 +270,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 " where "+ BOOK_TABLE_NAME + "." + BOOK_COLUMN_ID +" = '" + id + "'", null );
         res.moveToFirst();
 
+        //get all the authors
         //get the authors as a stirng to put into the book object
         Cursor authorres =  db.rawQuery( "select "+ AUTHOR_COLUMN_NAME +" from " + AUTHOR_TABLE_NAME +
                 " INNER JOIN " + BOOK_AUTHOR_TABLE_NAME + " ON " + BOOK_AUTHOR_TABLE_NAME + "." + BOOK_AUTHOR_COLUMN_AUTHORID+ " = " + AUTHOR_TABLE_NAME + "." + AUTHOR_COLUMN_ID +
@@ -270,7 +280,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         try {
             while (authorres.moveToNext()) {
 
-                authorString += authorres.getString(authorres.getColumnIndex(AUTHOR_COLUMN_NAME)) + ", ";
+                authorString += authorres.getString(authorres.getColumnIndex(AUTHOR_COLUMN_NAME)) + "; ";
 
             }
         } finally {
@@ -304,6 +314,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return tmp;
     }
 
+    //returns all the books as a list
     public List<Book> getAllBooks(){
         List<Book> array_list = new ArrayList<>();
 
@@ -321,19 +332,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             res.moveToNext();
         }
         res.close();
-        Collections.sort(array_list, new Comparator<Book>() {
 
-            DateFormat f = new SimpleDateFormat("dd-MM-yyyy");
-            public int compare(Book o1, Book o2) {
-                try {
-                    return f.parse(o1.getAddedDate()).compareTo(f.parse(o2.getAddedDate()));
-                } catch (ParseException e) {
-                    throw new IllegalArgumentException(e);
-                }
-            }
-        });
         return array_list;
     }
+    //gets a list of read books
+    //i.e where currentpage = total page
     public List<Book> getReadBooks(){
         List<Book> array_list = new ArrayList<>();
 
@@ -364,6 +367,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         });
         return array_list;
     }
+    //gets all the unread books
+    //i.e where currentpage < total pages
     public List<Book> getUnreadBooks(){
         List<Book> array_list = new ArrayList<>();
 

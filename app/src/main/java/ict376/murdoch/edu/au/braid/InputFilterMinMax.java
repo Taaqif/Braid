@@ -3,6 +3,7 @@ package ict376.murdoch.edu.au.braid;
 import android.text.InputFilter;
 import android.text.Spanned;
 //https://stackoverflow.com/questions/14212518/is-there-a-way-to-define-a-min-and-max-value-for-edittext-in-android
+//basiclally sets a input filter which allows only a a range of MIN to MAX values
 public class InputFilterMinMax implements InputFilter {
 
     private int min, max;

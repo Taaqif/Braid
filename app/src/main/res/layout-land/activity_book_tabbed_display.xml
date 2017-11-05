@@ -39,17 +39,17 @@
 
     <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/multiple_actions"
-        android:layout_width="55dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentRight="false"
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        app:fab_expandDirection="left"
+        app:fab_expandDirection="right"
         app:layout_anchor="@+id/container"
-        app:layout_anchorGravity="right|bottom"
+        app:layout_anchorGravity="bottom|left"
         fab:fab_addButtonColorNormal="@color/colorAccent"
         fab:fab_addButtonColorPressed="@color/colorAccent"
         fab:fab_addButtonPlusIconColor="@color/colorPrimaryDark"
@@ -67,28 +67,27 @@
             fab:fab_colorPressed="@android:color/background_dark" />
 
         <TextView
-            android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/round"
-            android:text="Add by camera" />
+            android:singleLine="true"
+            android:text="@string/add_by_camera" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabISBN"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="AddByISBNDialog"
             app:fab_icon="@android:drawable/ic_menu_sort_alphabetically"
             app:fab_size="normal"
             fab:fab_colorNormal="@color/colorAccent"
             fab:fab_colorPressed="@android:color/darker_gray" />
 
         <TextView
-            android:id="@+id/textView6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/round"
-            android:text="Add by ISBN" />
+            android:singleLine="true"
+            android:text="@string/add_by_isbn" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
@@ -106,7 +105,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/round"
-            android:text="Add Manually" />
+            android:singleLine="false"
+            android:text="@string/add_manually" />
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 

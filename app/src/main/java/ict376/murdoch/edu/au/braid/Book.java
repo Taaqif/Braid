@@ -3,7 +3,7 @@ package ict376.murdoch.edu.au.braid;
 import java.io.Serializable;
 
 /**
- * Book class
+ * Book class to hold the book related details
  * Created by Taaqif on 24/10/2017.
  */
 

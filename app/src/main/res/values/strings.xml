@@ -25,5 +25,35 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_book_tabbed_display">BookTabbedDisplayActivity</string>
     <string name="section_format">Hello World from section: %1$d</string>
+    <string name="take_photo">Take Photo</string>
+    <string name="extra_details">Extra Details</string>
+    <string name="main_details">Main Details</string>
+    <string name="title">Title</string>
+    <string name="author">Author</string>
+    <string name="isbn">ISBN</string>
+    <string name="total_pages">Total Pages</string>
+    <string name="current_page">Current Page</string>
+    <string name="publisher">Publisher</string>
+    <string name="date_published">Date Published</string>
+    <string name="add_by_camera">Add by camera</string>
+    <string name="add_by_isbn">Add by ISBN</string>
+    <string name="add_manually">Add Manually</string>
+    <string name="todo">TODO</string>
+    <string name="delete_book">Delete Book</string>
+    <string name="error_title">Enter a title to save the book!</string>
+    <string name="success_book_updated">Book Updated</string>
+    <string name="success_book_added">Book Added</string>
+    <string name="success_book_removed">Book Removed</string>
+    <string name="question_remove_book">Are you sure you wish to remove this book?</string>
+    <string name="title_remove_book">Remove book?</string>
+    <string name="error_camera_permission_not_granted">You must grant permission to the camera to use this feature</string>
+    <string name="title_add_book_ISBN">Add Book By ISBN</string>
+    <string name="prompt_isbn">Enter the ISBN of the book</string>
+    <string name="prompt_isbn">Enter the ISBN of the book</string>
+    <string name="isbn">ISBN</string>
+    <string name="title">Title</string>
+    <string name="author">Author</string>
+    <string name="page_x_of_x">Page x of x</string>
+    <string name="added">Added:</string>
 
 </resources>

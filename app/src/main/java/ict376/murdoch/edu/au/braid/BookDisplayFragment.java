@@ -13,18 +13,13 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 
-/**
- * A fragment representing a list of Items.
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
- * interface.
- */
+//displays list of items
 public class BookDisplayFragment extends Fragment {
 
-    // TODO: Customize parameter argument names
-    private static final String BOOK_STATUS = "boo-status";
-    // TODO: Customize parameters
+    //keys
+    private static final String BOOK_STATUS = "book-status";
     private int mBookStatus = 1;
+
     private OnListFragmentInteractionListener mListener;
     private RecyclerView recyclerView;
     private int mColumnCount =1;
@@ -47,6 +42,7 @@ public class BookDisplayFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         int currentOrientation = getResources().getConfiguration().orientation;
+        //sets the col count
         if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
             mColumnCount = 2;
         }
@@ -62,41 +58,44 @@ public class BookDisplayFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_book_display_list, container, false);
+        //set up and refresh the view
         recyclerView = (RecyclerView) view;
         refresh();
         return view;
     }
+    //refreshes the view with new data
     public void refresh(){
         DatabaseHelper mydb = new DatabaseHelper(getActivity());
 
-        //get the variable here.
         // Set the adapter
         recyclerView.getRecycledViewPool().clear();
+
+        //if orientation is landscape, display 2 row grid else display 1 linear layout
         if (mColumnCount <= 1) {
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         } else {
             recyclerView.setLayoutManager(new GridLayoutManager(getContext(), mColumnCount));
         }
+
+        //display the correct books based on the type
         recyclerView.setAdapter(null);
-            switch (mBookStatus){
-                case 1:
-                    recyclerView.setAdapter(new BookViewAdapter(mydb.getAllBooks(), mListener, BookDisplayFragment.this));
-                    break;
-                case 2:
-                    recyclerView.setAdapter(new BookViewAdapter(mydb.getReadBooks(), mListener, BookDisplayFragment.this));
-                    break;
-                case 3:
-                    recyclerView.setAdapter(new BookViewAdapter(mydb.getUnreadBooks(), mListener, BookDisplayFragment.this));
-                    break;
-                default:
-                    recyclerView.setAdapter(new BookViewAdapter(mydb.getAllBooks(), mListener, BookDisplayFragment.this));
-
-
-
-//            recyclerView.setAdapter(new BookViewAdapter(mydb.getAllBooks(), mListener));
+        switch (mBookStatus){
+            case 0:
+                recyclerView.setAdapter(new BookViewAdapter(mydb.getAllBooks(), mListener, BookDisplayFragment.this));
+                break;
+            case 1:
+                recyclerView.setAdapter(new BookViewAdapter(mydb.getReadBooks(), mListener, BookDisplayFragment.this));
+                break;
+            case 2:
+                recyclerView.setAdapter(new BookViewAdapter(mydb.getUnreadBooks(), mListener, BookDisplayFragment.this));
+                break;
+            default:
+                recyclerView.setAdapter(new BookViewAdapter(mydb.getAllBooks(), mListener, BookDisplayFragment.this));
         }
     }
 
+    //makes sure the adaptor is interaction listner is implmented
+    //for future use
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -107,6 +106,7 @@ public class BookDisplayFragment extends Fragment {
                     + " must implement OnListFragmentInteractionListener");
         }
     }
+
     @Override
     public void onResume(){
         super.onResume();

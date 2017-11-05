@@ -13,7 +13,7 @@
         android:layout_marginRight="26dp"
         android:backgroundTint="@color/colorPrimary"
         android:gravity="center"
-        android:hint="ISBN"
+        android:hint="@string/isbn"
         android:inputType="text"
         android:singleLine="true"
         android:textAlignment="viewStart" />

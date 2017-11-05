@@ -17,6 +17,7 @@ import android.view.View;
 
 public class AddBookActivity extends AppCompatActivity {
 
+    //keys
     private final static String ISBN_KEY = "ISBN";
     private final static String ID_KEY = "ID";
 
@@ -29,6 +30,7 @@ public class AddBookActivity extends AppCompatActivity {
         // add AddManuallyActivityFragment to the container layout
         if(savedInstanceState == null) {
             Bundle bundle = new Bundle();
+            //pasd the keys to the fragment
             bundle.putString(ISBN_KEY, getIntent().getStringExtra(ISBN_KEY));
             bundle.putSerializable(ID_KEY, getIntent().getSerializableExtra(ID_KEY));
             AddManuallyActivityFragment addbookfragment = new AddManuallyActivityFragment();
@@ -39,7 +41,7 @@ public class AddBookActivity extends AppCompatActivity {
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction().replace(R.id.add_book_fragment, fragment);
             fragmentTransaction.commit();
         }
-        // toolbar
+        // toolbar setup
         Toolbar toolbar = (Toolbar) findViewById(R.id.addBookToolbar);
         setSupportActionBar(toolbar);
 
@@ -60,17 +62,16 @@ public class AddBookActivity extends AppCompatActivity {
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+        // Inflate the menu; this has the save button in it
         getMenuInflater().inflate(R.menu.menu_add_book, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+        // Handle action bar item clicks here.
         int id = item.getItemId();
+        //save the book through the fragment
         if (id == R.id.action_save) {
             Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.add_book_fragment);
 
