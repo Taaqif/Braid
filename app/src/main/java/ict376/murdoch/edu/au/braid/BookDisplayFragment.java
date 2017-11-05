@@ -80,13 +80,13 @@ public class BookDisplayFragment extends Fragment {
         //display the correct books based on the type
         recyclerView.setAdapter(null);
         switch (mBookStatus){
-            case 0:
+            case 1:
                 recyclerView.setAdapter(new BookViewAdapter(mydb.getAllBooks(), mListener, BookDisplayFragment.this));
                 break;
-            case 1:
+            case 2:
                 recyclerView.setAdapter(new BookViewAdapter(mydb.getReadBooks(), mListener, BookDisplayFragment.this));
                 break;
-            case 2:
+            case 3:
                 recyclerView.setAdapter(new BookViewAdapter(mydb.getUnreadBooks(), mListener, BookDisplayFragment.this));
                 break;
             default:

@@ -11,6 +11,8 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -30,15 +32,53 @@ public class BookAPIHelper {
     RequestQueue requestQueue;  // HTTP requests queue.
 
 
-    public void getBookFromISBN(String isbn, final VolleyCallback callback) {
+    public void getBookFromISBN(final String isbn, final VolleyCallback callback) {
 
         JsonObjectRequest arrReq = new JsonObjectRequest (Request.Method.GET, baseURL + isbn,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        //is a json object
+                        try {
+                            JSONArray resBookArray = response.getJSONArray("items");
+                            Book tmp = new Book(-1);
+                            String thumbnail = "";
+                            if(resBookArray.length()>0){
+
+                                JSONObject bookInfo = resBookArray.getJSONObject(0).getJSONObject("volumeInfo");
+                                //Toast.makeText(getActivity(), "ISBN data found", Toast.LENGTH_SHORT).show();
+
+                                //set the data
+                                if(bookInfo.has("title")){
+
+                                    tmp.setTitle(bookInfo.getString("title"));
+                                }
+                                tmp.setISBN(isbn);
+                                if(bookInfo.has("authors")){
+                                    tmp.setAuthors(bookInfo.getJSONArray("authors").join("; ").replace("\"",""));
+                                }
+                                if(bookInfo.has("pageCount")){
+                                    tmp.setTotalPages(Integer.parseInt(bookInfo.getString("pageCount")));
+                                }
+                                if(bookInfo.has("publisher")){
+                                    tmp.setPublisher(bookInfo.getString("publisher"));
+                                }
+                                if(bookInfo.has("publishedDate")){
+                                    tmp.setPublishedDate(bookInfo.getString("publishedDate"));
+                                }
+                                if(bookInfo.has("imageLinks")) {
+                                    thumbnail = bookInfo.getJSONObject("imageLinks").getString("thumbnail");
+                                }
+                                callback.VolleyBookResponse(tmp, thumbnail);
+                            }
+
+                        } catch (JSONException e) {
+                            callback.VolleyBookResponse(null, null);
+                            e.printStackTrace();
+                            //Toast.makeText(getActivity(), "ISBN data could not be read", Toast.LENGTH_SHORT).show();
+                        }
                         //should probably do the JSON processing here and just pass the book to the
                         //callback
-                        callback.VolleyResponse(response);
                     }
 
                 },
@@ -56,6 +96,6 @@ public class BookAPIHelper {
     }
     //the callback interface
     public interface VolleyCallback {
-        void VolleyResponse(JSONObject books);
+        void VolleyBookResponse(Book book, String cover_url);
     }
 }

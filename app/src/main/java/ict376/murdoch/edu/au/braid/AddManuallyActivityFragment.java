@@ -109,7 +109,10 @@ public class AddManuallyActivityFragment extends Fragment  {
     //populate by book object thorugh serializable
     private void populateFieldsByBook(Serializable id) {
 
-        editingID = ((Book) id).getID();
+        if(((Book) id).getID() > 0){
+            editingID = ((Book) id).getID();
+            mDeleteBookButton.setEnabled(true);
+        }
 
         mTitle.setText(((Book) id).getTitle());
         mIsbn.setText(((Book) id).getISBN());
@@ -120,7 +123,7 @@ public class AddManuallyActivityFragment extends Fragment  {
         mTotalPages.setText(((Book) id).getTotalPages() + "");
         mCurrentPage.setText(((Book) id).getCurrentPages()+ "");
 
-        mDeleteBookButton.setEnabled(true);
+
         //if there is a cover
         if(((Book) id).getCover() != null && !((Book) id).getCover().isEmpty()){
             mCurrentPhotoPath = ((Book) id).getCover();
@@ -307,6 +310,7 @@ public class AddManuallyActivityFragment extends Fragment  {
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
+
             if(bundle.getString(ISBN_KEY) != null){
                 populateFieldsByISBN(bundle.getString(ISBN_KEY));
             }
@@ -406,10 +410,19 @@ public class AddManuallyActivityFragment extends Fragment  {
         bh.getBookFromISBN(isbn, new BookAPIHelper.VolleyCallback(){
 
             @Override
-            public void VolleyResponse(JSONObject books) {
+            public void VolleyBookResponse(Book book, String thumbnailURL) {
+                if (book != null){
+                    Toast.makeText(getActivity(), "ISBN data found", Toast.LENGTH_SHORT).show();
+                    new DownloadImageTask(mCoverThumbnail)
+                            .execute(thumbnailURL);
+                    populateFieldsByBook(book);
 
-
+                }else{
+                    Toast.makeText(getActivity(), "ISBN data could not be read", Toast.LENGTH_SHORT).show();
+                }
             }
+
+
         });
     }
 

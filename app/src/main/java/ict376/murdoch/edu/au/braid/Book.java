@@ -20,6 +20,19 @@ public class Book implements Serializable {
     private int totalPages;
     private int currentPages;
 
+    public Book(int id){
+        this.id = id;
+        this.title = "";
+        this.ISBN = "";
+        this.cover = "";
+        this.authors = "";
+        this.publisher = "";
+        this.publishedDate = "";
+        this.addedDate = "";
+        this.rating = 0;
+        this.totalPages = 0;
+        this.currentPages = 0;
+    }
     public Book(int id, String title, String isbn, String cover, String authors, String publisher, String publishedDate, String addedDate, int rating, int totalPages, int currentPages) {
         this.id = id;
         this.title = title;

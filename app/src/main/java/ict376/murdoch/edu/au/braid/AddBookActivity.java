@@ -31,6 +31,7 @@ public class AddBookActivity extends AppCompatActivity {
         if(savedInstanceState == null) {
             Bundle bundle = new Bundle();
             //pasd the keys to the fragment
+
             bundle.putString(ISBN_KEY, getIntent().getStringExtra(ISBN_KEY));
             bundle.putSerializable(ID_KEY, getIntent().getSerializableExtra(ID_KEY));
             AddManuallyActivityFragment addbookfragment = new AddManuallyActivityFragment();

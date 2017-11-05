@@ -9,7 +9,6 @@
     <string name="button_completed">Completed</string>
 
 
-    <!-- Strings for the add book fragment -->
     <string name="textView_title">Title:</string>
     <string name="textView_isbn">ISBN:</string>
     <string name="textView_cover">Cover:</string>
@@ -49,10 +48,6 @@
     <string name="error_camera_permission_not_granted">You must grant permission to the camera to use this feature</string>
     <string name="title_add_book_ISBN">Add Book By ISBN</string>
     <string name="prompt_isbn">Enter the ISBN of the book</string>
-    <string name="prompt_isbn">Enter the ISBN of the book</string>
-    <string name="isbn">ISBN</string>
-    <string name="title">Title</string>
-    <string name="author">Author</string>
     <string name="page_x_of_x">Page x of x</string>
     <string name="added">Added:</string>
 

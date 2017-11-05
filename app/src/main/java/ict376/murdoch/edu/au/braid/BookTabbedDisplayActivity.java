@@ -161,7 +161,6 @@ public class BookTabbedDisplayActivity extends AppCompatActivity implements Book
         if (scanningResult != null) {
             //we have a result
             String scanContent = scanningResult.getContents();
-
             // continue
             //make sure data is read
             if(scanContent != null && !scanContent.isEmpty()){
