@@ -10,5 +10,5 @@
     android:layout_marginRight="0dp"
     android:clipToPadding="false"
     app:layoutManager="LinearLayoutManager"
-    tools:context="ict376.murdoch.edu.au.braid.BookDisplayFragment"
+    tools:context="com.tyeXed.braid.BookDisplayFragment"
     tools:listitem="@layout/fragment_book_display" />

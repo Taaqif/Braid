@@ -14,7 +14,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingBottom="25sp"
-            tools:context="ict376.murdoch.edu.au.braid.AddManuallyActivityFragment"
+            tools:context="com.tyeXed.braid.AddManuallyActivityFragment"
             tools:layout_editor_absoluteX="0dp"
             tools:layout_editor_absoluteY="81dp">
 

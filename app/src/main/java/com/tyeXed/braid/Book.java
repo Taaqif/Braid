@@ -1,4 +1,4 @@
-package ict376.murdoch.edu.au.braid;
+package com.tyeXed.braid;
 
 import java.io.Serializable;
 

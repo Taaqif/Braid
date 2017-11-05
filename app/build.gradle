@@ -4,7 +4,7 @@ android {
     compileSdkVersion 26
     buildToolsVersion '26.0.2'
     defaultConfig {
-        applicationId "ict376.murdoch.edu.au.braid"
+        applicationId "com.tyeXed.braid"
         minSdkVersion 15
         targetSdkVersion 26
         versionCode 1

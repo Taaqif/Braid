@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ict376.murdoch.edu.au.braid.AddBookActivity">
+    tools:context="com.tyeXed.braid.AddBookActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

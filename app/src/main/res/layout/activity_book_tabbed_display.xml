@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="ict376.murdoch.edu.au.braid.BookTabbedDisplayActivity">
+    tools:context="com.tyeXed.braid.BookTabbedDisplayActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"

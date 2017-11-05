@@ -1,4 +1,4 @@
-package ict376.murdoch.edu.au.braid;
+package com.tyeXed.braid;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -25,17 +25,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -44,8 +39,6 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import static android.provider.MediaStore.Images.Media.getBitmap;
 
 
 public class AddManuallyActivityFragment extends Fragment  {

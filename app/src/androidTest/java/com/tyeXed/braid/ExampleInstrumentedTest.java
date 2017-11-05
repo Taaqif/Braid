@@ -1,4 +1,4 @@
-package ict376.murdoch.edu.au.braid;
+package com.tyeXed.braid;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
