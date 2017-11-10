@@ -32,22 +32,19 @@
                     android:layout_height="187dp"
 
                     android:orientation="vertical"
-                    android:paddingLeft="10sp"
-                    android:paddingRight="10sp"
                     android:paddingTop="20sp">
 
 
                     <ImageView
                         android:id="@+id/iv_coverThumbnail"
-                        android:layout_width="100dp"
+                        android:layout_width="match_parent"
                         android:layout_height="115dp"
-                        android:layout_marginEnd="30dp"
-                        android:layout_marginRight="20dp"
+                        android:contentDescription="@string/todo"
                         app:layout_constraintBottom_toTopOf="@+id/et_pubdate"
                         app:layout_constraintRight_toRightOf="@+id/et_genre"
                         app:layout_constraintTop_toTopOf="@+id/tv_isbn"
                         app:layout_constraintVertical_bias="0.6"
-                        app:srcCompat="@drawable/nocover" android:contentDescription="@string/todo" />
+                        app:srcCompat="@drawable/nocover" />
 
                     <Button
                         android:id="@+id/button_takeCoverPhoto"

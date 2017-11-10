@@ -1,5 +1,6 @@
 package com.tyeXed.braid;
 
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -9,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 public class AddBookActivity extends AppCompatActivity {
 
@@ -56,6 +58,7 @@ public class AddBookActivity extends AppCompatActivity {
 
         
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this has the save button in it
@@ -78,6 +81,7 @@ public class AddBookActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 
 
 

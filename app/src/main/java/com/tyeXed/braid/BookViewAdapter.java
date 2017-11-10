@@ -14,8 +14,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.tyeXed.braid.BookDisplayFragment.OnListFragmentInteractionListener;
 
+import java.io.File;
 import java.util.List;
 
 //recycler view adaptor that can display a book object and implemetes listners
@@ -58,28 +60,29 @@ public class BookViewAdapter extends RecyclerView.Adapter<BookViewAdapter.ViewHo
         holder.mPageView.setText("Page: " + currentpage + " of " + totalpages);
 
         if(holder.mItem.getCover() != null && !holder.mItem.getCover().isEmpty()){
-            Bitmap myBitmap = BitmapFactory.decodeFile(holder.mItem.getCover());
-            try {
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inSampleSize = 8;
-                ExifInterface exif = new ExifInterface(holder.mItem.getCover());
-                int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
-                Matrix matrix = new Matrix();
-                if (orientation == ExifInterface.ORIENTATION_ROTATE_90) {
-                    matrix.postRotate(90);
-                }
-                else if (orientation == ExifInterface.ORIENTATION_ROTATE_180) {
-                    matrix.postRotate(180);
-                }
-                else if (orientation == ExifInterface.ORIENTATION_ROTATE_270) {
-                    matrix.postRotate(270);
-                }
-                myBitmap = Bitmap.createBitmap(myBitmap, 0, 0, myBitmap.getWidth(), myBitmap.getHeight(), matrix, true); // rotating bitmap
-            }
-            catch (Exception e) {
-
-            }
-            holder.mCoverView.setImageBitmap(myBitmap);
+            Picasso.with(holder.mCoverView.getContext()).load(new File(holder.mItem.getCover())).resize(256,400).centerInside().into(holder.mCoverView);
+//            Bitmap myBitmap = BitmapFactory.decodeFile(holder.mItem.getCover());
+//            try {
+//                BitmapFactory.Options options = new BitmapFactory.Options();
+//                options.inSampleSize = 8;
+//                ExifInterface exif = new ExifInterface(holder.mItem.getCover());
+//                int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+//                Matrix matrix = new Matrix();
+//                if (orientation == ExifInterface.ORIENTATION_ROTATE_90) {
+//                    matrix.postRotate(90);
+//                }
+//                else if (orientation == ExifInterface.ORIENTATION_ROTATE_180) {
+//                    matrix.postRotate(180);
+//                }
+//                else if (orientation == ExifInterface.ORIENTATION_ROTATE_270) {
+//                    matrix.postRotate(270);
+//                }
+//                myBitmap = Bitmap.createBitmap(myBitmap, 0, 0, myBitmap.getWidth(), myBitmap.getHeight(), matrix, true); // rotating bitmap
+//            }
+//            catch (Exception e) {
+//
+//            }
+//            holder.mCoverView.setImageBitmap(myBitmap);
         }
 
 

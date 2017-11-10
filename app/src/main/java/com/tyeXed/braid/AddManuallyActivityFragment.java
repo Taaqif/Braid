@@ -1,8 +1,10 @@
 package com.tyeXed.braid;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -12,7 +14,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
@@ -31,6 +35,8 @@ import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -131,26 +137,28 @@ public class AddManuallyActivityFragment extends Fragment  {
     //needs considering
     //https://stackoverflow.com/questions/14066038/why-does-an-image-captured-using-camera-intent-gets-rotated-on-some-devices-on-a
     private void setCoverImage(String path){
-        Bitmap myBitmap = BitmapFactory.decodeFile(path);
-        try {
-            ExifInterface exif = new ExifInterface(path);
-            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
-            Matrix matrix = new Matrix();
-            if (orientation == ExifInterface.ORIENTATION_ROTATE_90) {
-                matrix.postRotate(90);
-            }
-            else if (orientation == ExifInterface.ORIENTATION_ROTATE_180) {
-                matrix.postRotate(180);
-            }
-            else if (orientation == ExifInterface.ORIENTATION_ROTATE_270) {
-                matrix.postRotate(270);
-            }
-            myBitmap = Bitmap.createBitmap(myBitmap, 0, 0, myBitmap.getWidth(), myBitmap.getHeight(), matrix, true); // rotating bitmap
-        }
-        catch (Exception e) {
+        Picasso.with(getContext()).load(new File(path)).resize(256,400).centerInside().into(mCoverThumbnail);
 
-        }
-        mCoverThumbnail.setImageBitmap(myBitmap);
+//        Bitmap myBitmap = BitmapFactory.decodeFile(path);
+//        try {
+//            ExifInterface exif = new ExifInterface(path);
+//            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+//            Matrix matrix = new Matrix();
+//            if (orientation == ExifInterface.ORIENTATION_ROTATE_90) {
+//                matrix.postRotate(90);
+//            }
+//            else if (orientation == ExifInterface.ORIENTATION_ROTATE_180) {
+//                matrix.postRotate(180);
+//            }
+//            else if (orientation == ExifInterface.ORIENTATION_ROTATE_270) {
+//                matrix.postRotate(270);
+//            }
+//            myBitmap = Bitmap.createBitmap(myBitmap, 0, 0, myBitmap.getWidth(), myBitmap.getHeight(), matrix, true); // rotating bitmap
+//        }
+//        catch (Exception e) {
+//
+//        }
+//        mCoverThumbnail.setImageBitmap(myBitmap);
     }
 
     @Override
@@ -288,7 +296,18 @@ public class AddManuallyActivityFragment extends Fragment  {
         mTakePhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                takePhoto();
+                if (ContextCompat.checkSelfPermission(getContext(),
+                        Manifest.permission.CAMERA)
+                        != PackageManager.PERMISSION_GRANTED) {
+
+                    requestPermissions(
+                            new String[]{Manifest.permission.CAMERA},
+                            1);
+                }else{
+                    //assume perimsiion granted
+                    takePhoto();
+                }
+
             }
         });
 
@@ -313,6 +332,29 @@ public class AddManuallyActivityFragment extends Fragment  {
         }
     }
 
+    //this is the callback that executes on the users response to the permission request
+    @Override
+    public void onRequestPermissionsResult(int requestCode,String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted
+                    //start the service
+                    takePhoto();
+
+                } else {
+                    // permission denied,
+                    Toast.makeText(getContext(), R.string.error_camera_permission_not_granted, Toast.LENGTH_SHORT).show();
+
+                }
+                return;
+            }
+
+        }
+    }
     //starts the delete book dialog process
     private void deleteBook() {
         AlertDialog.Builder builder;
@@ -325,9 +367,11 @@ public class AddManuallyActivityFragment extends Fragment  {
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // continue
+                        File file = new File(mCurrentPhotoPath);
+                        file.delete();
+                        mydb.deleteBook(editingID);
                         Toast.makeText(getContext(), R.string.success_book_removed, Toast.LENGTH_SHORT).show();
 
-                        mydb.deleteBook(editingID);
                         getActivity().finish();
                     }
                 })
@@ -430,13 +474,19 @@ public class AddManuallyActivityFragment extends Fragment  {
     }
 
     //take the image
-    private void takePhoto() {
+    public void takePhoto() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
             // Create the File where the photo should go
+            //delete old file
+
             File photoFile = null;
             try {
+                if(mCurrentPhotoPath != null && !mCurrentPhotoPath.isEmpty()){
+                    File file = new File(mCurrentPhotoPath);
+                    file.delete();
+                }
                 photoFile = createImageFile();
             } catch (IOException ex) {
                 // Error occurred while creating the File
@@ -444,7 +494,7 @@ public class AddManuallyActivityFragment extends Fragment  {
             // Continue only if the File was successfully created
             if (photoFile != null) {
                 Uri photoURI = FileProvider.getUriForFile(getActivity().getApplicationContext(),
-                        "ict376.murdoch.edu.au.braid",
+                        "com.tyeXed.braid",
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
@@ -454,19 +504,20 @@ public class AddManuallyActivityFragment extends Fragment  {
 
     //downlaods an image and sets the corresponding image view to
     //https://stackoverflow.com/questions/3090650/android-loading-an-image-from-the-web-with-asynctask
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+    private class DownloadImageTask extends AsyncTask<String, Void, File> {
         ImageView bmImage;
 
         public DownloadImageTask(ImageView bmImage) {
             this.bmImage = bmImage;
         }
 
-        protected Bitmap doInBackground(String... urls) {
+        protected File doInBackground(String... urls) {
             String urldisplay = urls[0];
+            File photoFile = null;
             Bitmap mIcon11 = null;
             try {
                 InputStream in = new java.net.URL(urldisplay).openStream();
-                File photoFile = createImageFile();
+                photoFile = createImageFile();
                 mIcon11 = BitmapFactory.decodeStream(in);
                 FileOutputStream out = new FileOutputStream(photoFile);
                 mIcon11.compress(Bitmap.CompressFormat.JPEG, 60, out);
@@ -477,11 +528,13 @@ public class AddManuallyActivityFragment extends Fragment  {
                 Log.e("Error", e.getMessage());
                 e.printStackTrace();
             }
-            return mIcon11;
+            return photoFile;
         }
 
-        protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
+        protected void onPostExecute(File result) {
+            Picasso.with(getContext()).load(result).into(bmImage);
+
+//            bmImage.setImageBitmap(result);
         }
     }
     //creates a file to be written to
